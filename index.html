@@ -816,6 +816,207 @@
             font-size: 0.8em;
         }
 
+        /* Scanner Styles */
+        .scanner-card .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn-sm {
+            padding: 8px 15px;
+            font-size: 0.85em;
+            margin-right: auto;
+        }
+
+        .scan-progress {
+            margin: 20px 0;
+            display: none;
+        }
+
+        .scan-progress.active {
+            display: block;
+        }
+
+        .scan-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .scan-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent), var(--accent-purple));
+            transition: width 0.3s ease;
+        }
+
+        .scan-text {
+            text-align: center;
+            margin-top: 10px;
+            color: var(--text-secondary);
+        }
+
+        .ip-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .ip-table th {
+            background: rgba(0, 212, 255, 0.1);
+            padding: 12px 15px;
+            text-align: right;
+            border-bottom: 2px solid rgba(0, 212, 255, 0.3);
+            font-weight: 600;
+        }
+
+        .ip-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .ip-table tr:hover {
+            background: rgba(0, 212, 255, 0.05);
+        }
+
+        .ip-cell {
+            font-family: monospace;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 600;
+        }
+
+        .badge.public {
+            background: rgba(0, 255, 136, 0.2);
+            color: var(--accent-green);
+        }
+
+        .badge.elastic {
+            background: rgba(170, 102, 255, 0.2);
+            color: var(--accent-purple);
+        }
+
+        .badge.private {
+            background: rgba(255, 204, 0, 0.2);
+            color: var(--accent-yellow);
+        }
+
+        .ping-cell {
+            font-weight: 600;
+        }
+
+        .ping-fast {
+            color: var(--accent-green);
+        }
+
+        .ping-medium {
+            color: var(--accent-yellow);
+        }
+
+        .ping-slow {
+            color: var(--accent-red);
+        }
+
+        .ports-cell {
+            font-size: 0.85em;
+        }
+
+        .port-open {
+            display: inline-block;
+            background: rgba(0, 255, 136, 0.15);
+            color: var(--accent-green);
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin: 2px;
+            font-size: 0.8em;
+        }
+
+        .port-closed {
+            display: inline-block;
+            background: rgba(255, 68, 102, 0.15);
+            color: var(--accent-red);
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin: 2px;
+            font-size: 0.8em;
+        }
+
+        .port-legend {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+        }
+
+        .port-legend h4 {
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+            font-size: 0.9em;
+        }
+
+        .port-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .port-tag {
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--accent);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .scan-summary {
+            margin-top: 25px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.05), rgba(0, 212, 255, 0.05));
+            border-radius: 15px;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+        }
+
+        .scan-summary h4 {
+            margin-bottom: 15px;
+            color: var(--accent-green);
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .summary-item {
+            text-align: center;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+
+        .summary-label {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 0.85em;
+            margin-bottom: 5px;
+        }
+
+        .summary-value {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
         @media (max-width: 768px) {
             .stat-grid {
                 grid-template-columns: repeat(2, 1fr);
@@ -1204,6 +1405,123 @@
                     <div class="stat-item">
                         <div class="stat-number">26</div>
                         <div class="stat-label">سرویس‌ها</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Full IP Scanner Card -->
+        <div class="card scanner-card" style="margin-bottom: 20px;">
+            <div class="card-header">
+                <span class="card-icon">🔍</span>
+                <span class="card-title">اسکنر کامل IP های AWS شما</span>
+                <button class="btn btn-primary btn-sm" onclick="startFullScan()">
+                    <span>🚀</span> شروع اسکن کامل
+                </button>
+            </div>
+            
+            <div class="scan-progress" id="scanProgress">
+                <div class="scan-bar">
+                    <div class="scan-fill" id="scanFill"></div>
+                </div>
+                <div class="scan-text" id="scanText">آماده اسکن...</div>
+            </div>
+            
+            <div class="scan-results" id="scanResults">
+                <!-- Scan results will appear here -->
+            </div>
+            
+            <div class="all-ips-table">
+                <table class="ip-table">
+                    <thead>
+                        <tr>
+                            <th>IP Address</th>
+                            <th>نوع</th>
+                            <th>سرور</th>
+                            <th>پینگ</th>
+                            <th>پورت‌های باز</th>
+                            <th>وضعیت</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ipTableBody">
+                        <tr data-ip="79.125.75.182">
+                            <td class="ip-cell">79.125.75.182</td>
+                            <td><span class="badge public">Public</span></td>
+                            <td>vpn-pro-server</td>
+                            <td class="ping-cell" id="ping-79.125.75.182">--</td>
+                            <td class="ports-cell" id="ports-79.125.75.182">--</td>
+                            <td class="status-cell" id="status-79.125.75.182">⏳</td>
+                        </tr>
+                        <tr data-ip="108.128.15.3">
+                            <td class="ip-cell">108.128.15.3</td>
+                            <td><span class="badge public">Public</span></td>
+                            <td>VPN-Netherlands</td>
+                            <td class="ping-cell" id="ping-108.128.15.3">--</td>
+                            <td class="ports-cell" id="ports-108.128.15.3">--</td>
+                            <td class="status-cell" id="status-108.128.15.3">⏳</td>
+                        </tr>
+                        <tr data-ip="46.51.141.95">
+                            <td class="ip-cell">46.51.141.95</td>
+                            <td><span class="badge elastic">Elastic IP</span></td>
+                            <td>Backup-1</td>
+                            <td class="ping-cell" id="ping-46.51.141.95">--</td>
+                            <td class="ports-cell" id="ports-46.51.141.95">--</td>
+                            <td class="status-cell" id="status-46.51.141.95">⏳</td>
+                        </tr>
+                        <tr data-ip="34.247.23.138">
+                            <td class="ip-cell">34.247.23.138</td>
+                            <td><span class="badge elastic">Elastic IP</span></td>
+                            <td>Backup-2</td>
+                            <td class="ping-cell" id="ping-34.247.23.138">--</td>
+                            <td class="ports-cell" id="ports-34.247.23.138">--</td>
+                            <td class="status-cell" id="status-34.247.23.138">⏳</td>
+                        </tr>
+                        <tr data-ip="63.32.250.131">
+                            <td class="ip-cell">63.32.250.131</td>
+                            <td><span class="badge elastic">Elastic IP</span></td>
+                            <td>Backup-3</td>
+                            <td class="ping-cell" id="ping-63.32.250.131">--</td>
+                            <td class="ports-cell" id="ports-63.32.250.131">--</td>
+                            <td class="status-cell" id="status-63.32.250.131">⏳</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="port-legend">
+                <h4>پورت‌های تست شده:</h4>
+                <div class="port-tags">
+                    <span class="port-tag">22 SSH</span>
+                    <span class="port-tag">80 HTTP</span>
+                    <span class="port-tag">443 HTTPS</span>
+                    <span class="port-tag">1194 OpenVPN</span>
+                    <span class="port-tag">51820 WireGuard</span>
+                    <span class="port-tag">8080 Proxy</span>
+                    <span class="port-tag">3128 Squid</span>
+                    <span class="port-tag">1080 SOCKS</span>
+                    <span class="port-tag">8443 Alt-HTTPS</span>
+                    <span class="port-tag">2083 V2Ray</span>
+                </div>
+            </div>
+            
+            <div class="scan-summary" id="scanSummary" style="display: none;">
+                <h4>📊 خلاصه اسکن</h4>
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <span class="summary-label">IP های فعال:</span>
+                        <span class="summary-value" id="activeIPs">0</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">میانگین پینگ:</span>
+                        <span class="summary-value" id="avgPing">--</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">پورت‌های باز:</span>
+                        <span class="summary-value" id="openPorts">0</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">بهترین IP:</span>
+                        <span class="summary-value" id="bestIP">--</span>
                     </div>
                 </div>
             </div>
@@ -1876,6 +2194,197 @@
             setTimeout(() => {
                 progress.classList.remove('active');
             }, 2000);
+        }
+
+        // ==================== IP SCANNER ====================
+        
+        const yourIPs = [
+            { ip: '79.125.75.182', type: 'public', name: 'vpn-pro-server' },
+            { ip: '108.128.15.3', type: 'public', name: 'VPN-Netherlands' },
+            { ip: '46.51.141.95', type: 'elastic', name: 'Backup-1' },
+            { ip: '34.247.23.138', type: 'elastic', name: 'Backup-2' },
+            { ip: '63.32.250.131', type: 'elastic', name: 'Backup-3' }
+        ];
+        
+        const portsToScan = [
+            { port: 22, name: 'SSH' },
+            { port: 80, name: 'HTTP' },
+            { port: 443, name: 'HTTPS' },
+            { port: 1194, name: 'OpenVPN' },
+            { port: 51820, name: 'WireGuard' },
+            { port: 8080, name: 'Proxy' },
+            { port: 3128, name: 'Squid' },
+            { port: 1080, name: 'SOCKS' },
+            { port: 8443, name: 'Alt-HTTPS' },
+            { port: 2083, name: 'V2Ray' }
+        ];
+        
+        // Scan a single IP for ping
+        async function scanIPPing(ip) {
+            const start = performance.now();
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 5000);
+                
+                // Try HTTPS first
+                await fetch(`https://${ip}:443`, {
+                    mode: 'no-cors',
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                return Math.round(performance.now() - start);
+            } catch (e) {
+                // Try HTTP
+                try {
+                    const controller2 = new AbortController();
+                    const timeoutId2 = setTimeout(() => controller2.abort(), 3000);
+                    
+                    await fetch(`http://${ip}:80`, {
+                        mode: 'no-cors',
+                        signal: controller2.signal
+                    });
+                    
+                    clearTimeout(timeoutId2);
+                    return Math.round(performance.now() - start);
+                } catch (e2) {
+                    return null;
+                }
+            }
+        }
+        
+        // Scan a port on an IP
+        async function scanPort(ip, port) {
+            const start = performance.now();
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 2000);
+                
+                const protocol = port === 443 || port === 8443 || port === 2083 ? 'https' : 'http';
+                
+                await fetch(`${protocol}://${ip}:${port}`, {
+                    mode: 'no-cors',
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                const time = performance.now() - start;
+                return { open: time < 1500, time: Math.round(time) };
+            } catch (e) {
+                if (e.name === 'AbortError') {
+                    return { open: false, time: null };
+                }
+                // In no-cors, we can't distinguish between closed and CORS error
+                const time = performance.now() - start;
+                return { open: time < 1000, time: Math.round(time) };
+            }
+        }
+        
+        // Full IP scan
+        async function startFullScan() {
+            const progressDiv = document.getElementById('scanProgress');
+            const scanFill = document.getElementById('scanFill');
+            const scanText = document.getElementById('scanText');
+            const summary = document.getElementById('scanSummary');
+            
+            progressDiv.classList.add('active');
+            summary.style.display = 'none';
+            
+            let totalSteps = yourIPs.length * (portsToScan.length + 1);
+            let currentStep = 0;
+            let results = [];
+            let totalOpenPorts = 0;
+            let pings = [];
+            
+            for (const ipData of yourIPs) {
+                const ip = ipData.ip;
+                
+                // Update progress
+                scanText.textContent = `در حال اسکن ${ip}...`;
+                
+                // Get ping
+                const pingCell = document.getElementById(`ping-${ip}`);
+                const statusCell = document.getElementById(`status-${ip}`);
+                const portsCell = document.getElementById(`ports-${ip}`);
+                
+                pingCell.textContent = '...';
+                pingCell.className = 'ping-cell';
+                
+                const ping = await scanIPPing(ip);
+                currentStep++;
+                scanFill.style.width = `${(currentStep / totalSteps) * 100}%`;
+                
+                if (ping !== null) {
+                    pingCell.textContent = `${ping}ms`;
+                    pings.push(ping);
+                    
+                    if (ping < 100) {
+                        pingCell.classList.add('ping-fast');
+                    } else if (ping < 200) {
+                        pingCell.classList.add('ping-medium');
+                    } else {
+                        pingCell.classList.add('ping-slow');
+                    }
+                } else {
+                    pingCell.textContent = 'N/A';
+                    pingCell.classList.add('ping-slow');
+                }
+                
+                // Scan ports
+                let openPorts = [];
+                portsCell.innerHTML = '<span style="color: var(--text-secondary);">در حال اسکن...</span>';
+                
+                for (const portInfo of portsToScan) {
+                    scanText.textContent = `اسکن ${ip}:${portInfo.port}...`;
+                    
+                    const result = await scanPort(ip, portInfo.port);
+                    currentStep++;
+                    scanFill.style.width = `${(currentStep / totalSteps) * 100}%`;
+                    
+                    if (result.open) {
+                        openPorts.push(portInfo);
+                        totalOpenPorts++;
+                    }
+                }
+                
+                // Update ports display
+                if (openPorts.length > 0) {
+                    portsCell.innerHTML = openPorts.map(p => 
+                        `<span class="port-open">${p.port}</span>`
+                    ).join('');
+                    statusCell.textContent = '✅ فعال';
+                    statusCell.style.color = 'var(--accent-green)';
+                } else {
+                    portsCell.innerHTML = '<span class="port-closed">هیچ پورتی</span>';
+                    statusCell.textContent = '⚠️ محدود';
+                    statusCell.style.color = 'var(--accent-yellow)';
+                }
+                
+                results.push({
+                    ...ipData,
+                    ping,
+                    openPorts: openPorts.length
+                });
+            }
+            
+            // Show summary
+            const activeIPs = results.filter(r => r.ping !== null).length;
+            const avgPing = pings.length > 0 ? Math.round(pings.reduce((a, b) => a + b, 0) / pings.length) : '--';
+            const bestIP = results.sort((a, b) => (a.ping || 9999) - (b.ping || 9999))[0];
+            
+            document.getElementById('activeIPs').textContent = `${activeIPs} از ${yourIPs.length}`;
+            document.getElementById('avgPing').textContent = avgPing !== '--' ? `${avgPing}ms` : '--';
+            document.getElementById('openPorts').textContent = totalOpenPorts;
+            document.getElementById('bestIP').textContent = bestIP ? bestIP.ip : '--';
+            
+            summary.style.display = 'block';
+            
+            scanText.textContent = '✓ اسکن کامل شد!';
+            scanFill.style.background = 'linear-gradient(90deg, #00ff88, #00d4ff)';
+            
+            setTimeout(() => {
+                progressDiv.classList.remove('active');
+            }, 3000);
         }
 
         // Initialize
