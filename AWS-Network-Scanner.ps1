@@ -568,6 +568,25 @@ $($pingResults | ForEach-Object { "   $($_.IP) - $($_.Name): $($_.Ping)ms [$($_.
 ═══════════════════════════════════════════════════════════════
 "@
 
+# ذخیره در دسکتاپ
+$desktopPath = [Environment]::GetFolderPath("Desktop")
+$reportPath = Join-Path $desktopPath "AWS-Network-Report.txt"
 $report | Out-File -FilePath $reportPath -Encoding UTF8
-Write-Host "  📄 گزارش ذخیره شد: $reportPath" -ForegroundColor Cyan
+
 Write-Host ""
+Write-Host "  ╔═══════════════════════════════════════════════════════════════╗" -ForegroundColor Green
+Write-Host "  ║  📄 گزارش ذخیره شد در دسکتاپ:                                ║" -ForegroundColor Green
+Write-Host "  ║     AWS-Network-Report.txt                                    ║" -ForegroundColor Green
+Write-Host "  ╚═══════════════════════════════════════════════════════════════╝" -ForegroundColor Green
+Write-Host ""
+Write-Host "  مسیر کامل: $reportPath" -ForegroundColor Cyan
+Write-Host ""
+Write-Host ""
+Write-Host "  ═══════════════════════════════════════════════════════════════" -ForegroundColor Yellow
+Write-Host "  برای بستن این پنجره، یک کلید را فشار دهید..." -ForegroundColor Yellow
+Write-Host "  ═══════════════════════════════════════════════════════════════" -ForegroundColor Yellow
+Write-Host ""
+
+# صبر کن تا کاربر کلید بزنه
+$null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+
