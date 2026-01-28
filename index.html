@@ -490,6 +490,16 @@
             0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
         }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-50%) translateY(-50px); opacity: 0; }
+            to { transform: translateX(-50%) translateY(0); opacity: 1; }
+        }
+        
+        @keyframes slideOut {
+            from { transform: translateX(-50%) translateY(0); opacity: 1; }
+            to { transform: translateX(-50%) translateY(-50px); opacity: 0; }
+        }
 
         .testing {
             animation: pulse 1.5s infinite;
@@ -1074,29 +1084,37 @@
             <div class="card">
                 <div class="card-header">
                     <span class="card-icon">📍</span>
-                    <span class="card-title">اطلاعات IP</span>
+                    <span class="card-title">اطلاعات IP شما</span>
+                    <button class="btn btn-sm" onclick="testIP()" style="margin-right: auto; padding: 5px 12px; font-size: 0.8em;">
+                        🔄 بروزرسانی
+                    </button>
                 </div>
                 <div class="ip-info" id="ipInfo">
-                    <div class="ip-row">
-                        <span class="ip-label">IP آدرس</span>
-                        <span class="ip-value" id="ipAddress">--</span>
+                    <div class="ip-row" style="background: linear-gradient(90deg, rgba(0,212,255,0.1), transparent); padding: 12px; border-radius: 8px;">
+                        <span class="ip-label" style="font-weight: bold;">🌐 IP فعلی</span>
+                        <span class="ip-value" id="ipAddress" style="font-size: 1.2em; color: #00d4ff;">--</span>
                     </div>
                     <div class="ip-row">
-                        <span class="ip-label">کشور</span>
+                        <span class="ip-label">🏳️ کشور</span>
                         <span class="ip-value" id="ipCountry">--</span>
                     </div>
                     <div class="ip-row">
-                        <span class="ip-label">شهر</span>
+                        <span class="ip-label">🏙️ شهر</span>
                         <span class="ip-value" id="ipCity">--</span>
                     </div>
                     <div class="ip-row">
-                        <span class="ip-label">ISP</span>
+                        <span class="ip-label">📡 ISP</span>
                         <span class="ip-value" id="ipISP">--</span>
                     </div>
-                    <div class="ip-row" id="vpnStatus">
-                        <span class="ip-label">وضعیت VPN</span>
+                    <div class="ip-row" id="vpnStatus" style="background: linear-gradient(90deg, rgba(0,255,136,0.1), transparent); padding: 12px; border-radius: 8px; margin-top: 10px;">
+                        <span class="ip-label" style="font-weight: bold;">🔒 وضعیت VPN</span>
                         <span class="ip-value" id="vpnStatusText">--</span>
                     </div>
+                </div>
+                <div style="margin-top: 15px; padding: 12px; background: rgba(255,204,0,0.1); border-radius: 8px; border-right: 3px solid #ffcc00;">
+                    <p style="color: #ffcc00; font-size: 0.9em; margin: 0;">
+                        💡 <strong>توجه:</strong> این IP فعلی شماست. اگر VPN روشن باشد، IP سرور VPN نمایش داده می‌شود.
+                    </p>
                 </div>
             </div>
 
@@ -1720,48 +1738,122 @@
         async function testIP() {
             try {
                 document.getElementById('ipAddress').textContent = '...';
+                document.getElementById('ipCountry').textContent = '...';
+                document.getElementById('ipCity').textContent = '...';
+                document.getElementById('ipISP').textContent = '...';
                 
-                const response = await fetch('https://ipapi.co/json/', { 
-                    mode: 'cors',
-                    cache: 'no-cache'
-                });
+                // Try multiple APIs for reliability
+                let data = null;
                 
-                if (!response.ok) throw new Error('Failed');
-                
-                const data = await response.json();
-                
-                document.getElementById('ipAddress').textContent = data.ip || '--';
-                document.getElementById('ipCountry').textContent = `${data.country_name || '--'} (${data.country_code || '--'})`;
-                document.getElementById('ipCity').textContent = data.city || '--';
-                document.getElementById('ipISP').textContent = data.org || '--';
-                
-                const vpnRow = document.getElementById('vpnStatus');
-                const vpnText = document.getElementById('vpnStatusText');
-                
-                if (data.country_code === 'IR') {
-                    vpnRow.classList.remove('vpn-active');
-                    vpnRow.classList.add('vpn-inactive');
-                    vpnText.textContent = '❌ غیرفعال';
-                    vpnText.style.color = '#ff4466';
-                } else {
-                    vpnRow.classList.remove('vpn-inactive');
-                    vpnRow.classList.add('vpn-active');
-                    vpnText.textContent = '✅ فعال';
-                    vpnText.style.color = '#00ff88';
+                // API 1: ipapi.co
+                try {
+                    const response = await fetch('https://ipapi.co/json/', { 
+                        mode: 'cors',
+                        cache: 'no-cache'
+                    });
+                    if (response.ok) {
+                        data = await response.json();
+                    }
+                } catch (e) {
+                    console.log('ipapi.co failed, trying alternative...');
                 }
                 
-                testResults.ip = data;
+                // API 2: ip-api.com (fallback)
+                if (!data || !data.ip) {
+                    try {
+                        const response = await fetch('http://ip-api.com/json/?fields=status,country,countryCode,city,isp,query');
+                        if (response.ok) {
+                            const apiData = await response.json();
+                            if (apiData.status === 'success') {
+                                data = {
+                                    ip: apiData.query,
+                                    country_name: apiData.country,
+                                    country_code: apiData.countryCode,
+                                    city: apiData.city,
+                                    org: apiData.isp
+                                };
+                            }
+                        }
+                    } catch (e) {
+                        console.log('ip-api.com also failed');
+                    }
+                }
+                
+                if (data && data.ip) {
+                    document.getElementById('ipAddress').textContent = data.ip;
+                    document.getElementById('ipCountry').textContent = `${data.country_name || '--'} ${getCountryFlag(data.country_code)}`;
+                    document.getElementById('ipCity').textContent = data.city || '--';
+                    document.getElementById('ipISP').textContent = data.org || '--';
+                    
+                    const vpnRow = document.getElementById('vpnStatus');
+                    const vpnText = document.getElementById('vpnStatusText');
+                    
+                    if (data.country_code === 'IR') {
+                        vpnRow.classList.remove('vpn-active');
+                        vpnRow.classList.add('vpn-inactive');
+                        vpnText.innerHTML = '❌ غیرفعال - <span style="color: #ffcc00;">IP ایران</span>';
+                        vpnText.style.color = '#ff4466';
+                        
+                        // Show warning for Iran users
+                        showNotification('⚠️ شما با IP ایران متصل هستید. برخی سرویس‌ها ممکن است فیلتر باشند.', 'warning');
+                    } else {
+                        vpnRow.classList.remove('vpn-inactive');
+                        vpnRow.classList.add('vpn-active');
+                        vpnText.innerHTML = `✅ فعال - <span style="color: #00ff88;">${data.country_name}</span>`;
+                        vpnText.style.color = '#00ff88';
+                        
+                        showNotification(`✅ VPN فعال است. IP شما: ${data.country_name}`, 'success');
+                    }
+                    
+                    testResults.ip = data;
+                } else {
+                    throw new Error('No data received');
+                }
                 
             } catch (error) {
-                // Try alternative API
-                try {
-                    const response = await fetch('https://api.ipify.org?format=json');
-                    const data = await response.json();
-                    document.getElementById('ipAddress').textContent = data.ip || 'خطا';
-                } catch (e) {
-                    document.getElementById('ipAddress').textContent = 'خطا در دریافت';
-                }
+                console.error('IP test error:', error);
+                document.getElementById('ipAddress').textContent = 'خطا در دریافت';
+                document.getElementById('ipCountry').textContent = '--';
+                document.getElementById('ipCity').textContent = '--';
+                document.getElementById('ipISP').textContent = '--';
             }
+        }
+        
+        // Get country flag emoji
+        function getCountryFlag(countryCode) {
+            if (!countryCode) return '';
+            const codePoints = countryCode
+                .toUpperCase()
+                .split('')
+                .map(char => 127397 + char.charCodeAt());
+            return String.fromCodePoint(...codePoints);
+        }
+        
+        // Show notification
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.innerHTML = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                padding: 15px 25px;
+                border-radius: 10px;
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+                font-size: 1em;
+                ${type === 'warning' ? 'background: linear-gradient(135deg, #ff8800, #ff4400); color: white;' : ''}
+                ${type === 'success' ? 'background: linear-gradient(135deg, #00ff88, #00cc66); color: #000;' : ''}
+                ${type === 'info' ? 'background: linear-gradient(135deg, #00d4ff, #0088ff); color: white;' : ''}
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 4000);
         }
 
         // Test single site
