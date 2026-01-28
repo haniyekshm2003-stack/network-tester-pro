@@ -2199,88 +2199,110 @@
         // ==================== IP SCANNER ====================
         
         const yourIPs = [
-            { ip: '79.125.75.182', type: 'public', name: 'vpn-pro-server' },
-            { ip: '108.128.15.3', type: 'public', name: 'VPN-Netherlands' },
-            { ip: '46.51.141.95', type: 'elastic', name: 'Backup-1' },
-            { ip: '34.247.23.138', type: 'elastic', name: 'Backup-2' },
-            { ip: '63.32.250.131', type: 'elastic', name: 'Backup-3' }
+            { ip: '79.125.75.182', type: 'public', name: 'vpn-pro-server', flag: '🇮🇪' },
+            { ip: '108.128.15.3', type: 'public', name: 'VPN-Netherlands', flag: '🇳🇱' },
+            { ip: '46.51.141.95', type: 'elastic', name: 'Elastic-1', flag: '🇮🇪' },
+            { ip: '34.247.23.138', type: 'elastic', name: 'Elastic-2', flag: '🇮🇪' },
+            { ip: '63.32.250.131', type: 'elastic', name: 'Elastic-3', flag: '🇮🇪' }
         ];
         
         const portsToScan = [
-            { port: 22, name: 'SSH' },
-            { port: 80, name: 'HTTP' },
-            { port: 443, name: 'HTTPS' },
-            { port: 1194, name: 'OpenVPN' },
-            { port: 51820, name: 'WireGuard' },
-            { port: 8080, name: 'Proxy' },
-            { port: 3128, name: 'Squid' },
-            { port: 1080, name: 'SOCKS' },
-            { port: 8443, name: 'Alt-HTTPS' },
-            { port: 2083, name: 'V2Ray' }
+            { port: 22, name: 'SSH', protocol: 'tcp' },
+            { port: 80, name: 'HTTP', protocol: 'http' },
+            { port: 443, name: 'HTTPS', protocol: 'https' },
+            { port: 1194, name: 'OpenVPN', protocol: 'tcp' },
+            { port: 51820, name: 'WireGuard', protocol: 'udp' },
+            { port: 8080, name: 'Proxy', protocol: 'http' },
+            { port: 3128, name: 'Squid', protocol: 'http' },
+            { port: 1080, name: 'SOCKS', protocol: 'tcp' },
+            { port: 8443, name: 'Alt-HTTPS', protocol: 'https' },
+            { port: 2083, name: 'V2Ray', protocol: 'https' }
         ];
         
-        // Scan a single IP for ping using Image load technique
+        // Scan a single IP for ping using multiple methods
         async function scanIPPing(ip) {
-            return new Promise((resolve) => {
-                const start = performance.now();
-                const img = new Image();
-                let resolved = false;
-                
-                const timeout = setTimeout(() => {
-                    if (!resolved) {
-                        resolved = true;
-                        // Even on timeout, the connection attempt gives us timing info
-                        const elapsed = performance.now() - start;
-                        if (elapsed < 4500) {
-                            resolve(Math.round(elapsed));
-                        } else {
-                            resolve(null);
-                        }
-                    }
-                }, 5000);
-                
-                img.onload = img.onerror = () => {
-                    if (!resolved) {
-                        resolved = true;
-                        clearTimeout(timeout);
-                        resolve(Math.round(performance.now() - start));
-                    }
-                };
-                
-                // Random port to avoid caching
-                img.src = `https://${ip}:443/favicon.ico?t=${Date.now()}`;
-            });
-        }
-        
-        // Scan a port on an IP using fetch with timing
-        async function scanPort(ip, port) {
-            return new Promise((resolve) => {
+            const methods = [];
+            
+            // Method 1: Fetch with timing
+            methods.push(new Promise((resolve) => {
                 const start = performance.now();
                 const controller = new AbortController();
-                
                 const timeout = setTimeout(() => {
                     controller.abort();
-                    resolve({ open: false, time: null });
-                }, 2500);
+                    resolve(null);
+                }, 4000);
                 
-                const protocol = (port === 443 || port === 8443 || port === 2083) ? 'https' : 'http';
-                
-                fetch(`${protocol}://${ip}:${port}/`, {
+                fetch(`https://${ip}/`, {
                     mode: 'no-cors',
-                    signal: controller.signal,
-                    cache: 'no-store'
+                    cache: 'no-store',
+                    signal: controller.signal
                 })
                 .then(() => {
                     clearTimeout(timeout);
-                    const time = Math.round(performance.now() - start);
-                    resolve({ open: time < 2000, time });
+                    resolve(Math.round(performance.now() - start));
+                })
+                .catch(() => {
+                    clearTimeout(timeout);
+                    const elapsed = performance.now() - start;
+                    // If failed quickly, server responded
+                    if (elapsed < 3000) {
+                        resolve(Math.round(elapsed));
+                    } else {
+                        resolve(null);
+                    }
+                });
+            }));
+            
+            // Method 2: Image load
+            methods.push(new Promise((resolve) => {
+                const start = performance.now();
+                const img = new Image();
+                const timeout = setTimeout(() => {
+                    resolve(null);
+                }, 4000);
+                
+                img.onload = img.onerror = () => {
+                    clearTimeout(timeout);
+                    resolve(Math.round(performance.now() - start));
+                };
+                
+                img.src = `https://${ip}/favicon.ico?_=${Date.now()}`;
+            }));
+            
+            // Return first successful result
+            const result = await Promise.race(methods);
+            return result;
+        }
+        
+        // Scan a port - simplified approach
+        async function scanPort(ip, portInfo) {
+            const { port, protocol } = portInfo;
+            const start = performance.now();
+            
+            return new Promise((resolve) => {
+                const controller = new AbortController();
+                const timeout = setTimeout(() => {
+                    controller.abort();
+                    resolve({ open: false, time: null });
+                }, 2000);
+                
+                const url = protocol === 'https' ? `https://${ip}:${port}/` : `http://${ip}:${port}/`;
+                
+                fetch(url, {
+                    mode: 'no-cors',
+                    cache: 'no-store',
+                    signal: controller.signal
+                })
+                .then(() => {
+                    clearTimeout(timeout);
+                    resolve({ open: true, time: Math.round(performance.now() - start) });
                 })
                 .catch((e) => {
                     clearTimeout(timeout);
-                    const time = Math.round(performance.now() - start);
-                    // Fast failure means port responded (even with error)
-                    if (time < 1500 && e.name !== 'AbortError') {
-                        resolve({ open: true, time });
+                    const elapsed = performance.now() - start;
+                    // Quick failure = port responded (connection refused or CORS)
+                    if (elapsed < 1500 && e.name !== 'AbortError') {
+                        resolve({ open: true, time: Math.round(elapsed) });
                     } else {
                         resolve({ open: false, time: null });
                     }
@@ -2290,6 +2312,10 @@
         
         // Full IP scan
         async function startFullScan() {
+            console.log('🚀 Starting full IP scan...');
+            console.log('IPs to scan:', yourIPs);
+            console.log('Ports to scan:', portsToScan);
+            
             const progressDiv = document.getElementById('scanProgress');
             const scanFill = document.getElementById('scanFill');
             const scanText = document.getElementById('scanText');
@@ -2316,6 +2342,9 @@
                 const statusCell = document.getElementById(`status-${idx}`);
                 const portsCell = document.getElementById(`ports-${idx}`);
                 
+                console.log(`Scanning index ${idx}: ${ip}`);
+                console.log(`Elements found - ping: ${!!pingCell}, status: ${!!statusCell}, ports: ${!!portsCell}`);
+                
                 if (!pingCell || !statusCell || !portsCell) {
                     console.error(`Elements not found for index ${idx}`);
                     continue;
@@ -2325,6 +2354,7 @@
                 pingCell.className = 'ping-cell';
                 
                 const ping = await scanIPPing(ip);
+                console.log(`Ping result for ${ip}: ${ping}ms`);
                 currentStep++;
                 scanFill.style.width = `${(currentStep / totalSteps) * 100}%`;
                 
@@ -2351,7 +2381,7 @@
                 for (const portInfo of portsToScan) {
                     scanText.textContent = `اسکن ${ip}:${portInfo.port}...`;
                     
-                    const result = await scanPort(ip, portInfo.port);
+                    const result = await scanPort(ip, portInfo);
                     currentStep++;
                     scanFill.style.width = `${(currentStep / totalSteps) * 100}%`;
                     
