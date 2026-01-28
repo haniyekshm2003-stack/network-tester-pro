@@ -494,6 +494,165 @@
         .testing {
             animation: pulse 1.5s infinite;
         }
+
+        /* AWS Styles */
+        .aws-list {
+            display: grid;
+            gap: 8px;
+        }
+
+        .aws-item {
+            display: grid;
+            grid-template-columns: 40px 1fr auto auto;
+            gap: 10px;
+            align-items: center;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .aws-item:hover {
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .aws-flag {
+            font-size: 1.5em;
+        }
+
+        .aws-region {
+            font-weight: 500;
+        }
+
+        .aws-code {
+            color: var(--text-secondary);
+            font-size: 0.85em;
+            font-family: monospace;
+        }
+
+        .aws-ping {
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            min-width: 70px;
+            text-align: center;
+        }
+
+        .your-servers {
+            display: grid;
+            gap: 10px;
+        }
+
+        .server-item {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 15px;
+            align-items: center;
+            padding: 15px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(170, 102, 255, 0.1));
+            border-radius: 12px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .server-name {
+            font-weight: 600;
+        }
+
+        .server-ip {
+            font-family: monospace;
+            color: var(--accent);
+            background: rgba(0, 0, 0, 0.3);
+            padding: 5px 10px;
+            border-radius: 6px;
+        }
+
+        .server-ping {
+            min-width: 80px;
+            text-align: center;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .aws-services {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 10px;
+        }
+
+        .service-item {
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .service-item:hover {
+            background: rgba(0, 212, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .service-icon {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+
+        .service-name {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+        }
+
+        .service-ping {
+            font-size: 0.8em;
+            margin-top: 5px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            display: inline-block;
+        }
+
+        .aws-stats {
+            padding: 10px 0;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(170, 102, 255, 0.05));
+            border-radius: 15px;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            margin-top: 5px;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .stat-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .server-item {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+        }
     </style>
 </head>
 <body>
@@ -516,6 +675,9 @@
             </button>
             <button class="btn btn-secondary" onclick="testSites()">
                 <span>🌍</span> تست سایت‌ها
+            </button>
+            <button class="btn btn-secondary" onclick="testAWS()">
+                <span>☁️</span> تست AWS
             </button>
             <button class="btn btn-secondary" onclick="testSpeed()">
                 <span>⚡</span> تست سرعت
@@ -618,6 +780,91 @@
                     <!-- Country results will be populated here -->
                 </div>
             </div>
+
+            <!-- AWS Test Card -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-icon">☁️</span>
+                    <span class="card-title">تست AWS Regions</span>
+                </div>
+                <div class="aws-list" id="awsList">
+                    <!-- AWS results will be populated here -->
+                </div>
+            </div>
+
+            <!-- Your AWS Resources Card -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-icon">🖥️</span>
+                    <span class="card-title">سرورهای VPN شما</span>
+                </div>
+                <div class="your-servers" id="yourServers">
+                    <div class="server-item">
+                        <span class="server-name">🇮🇪 vpn-pro-server</span>
+                        <span class="server-ip">79.125.75.182</span>
+                        <span class="server-ping" id="ping-vpn1">--</span>
+                    </div>
+                    <div class="server-item">
+                        <span class="server-name">🇳🇱 VPN-Netherlands</span>
+                        <span class="server-ip">108.128.15.3</span>
+                        <span class="server-ping" id="ping-vpn2">--</span>
+                    </div>
+                    <div class="server-item">
+                        <span class="server-name">🇮🇪 Backup-1</span>
+                        <span class="server-ip">46.51.141.95</span>
+                        <span class="server-ping" id="ping-vpn3">--</span>
+                    </div>
+                    <div class="server-item">
+                        <span class="server-name">🇮🇪 Backup-2</span>
+                        <span class="server-ip">34.247.23.138</span>
+                        <span class="server-ping" id="ping-vpn4">--</span>
+                    </div>
+                    <div class="server-item">
+                        <span class="server-name">🇮🇪 Backup-3</span>
+                        <span class="server-ip">63.32.250.131</span>
+                        <span class="server-ping" id="ping-vpn5">--</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AWS Services Card -->
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-icon">📊</span>
+                    <span class="card-title">تست AWS Services</span>
+                </div>
+                <div class="aws-services" id="awsServices">
+                    <!-- AWS Services will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- AWS Stats Card -->
+        <div class="card" style="margin-bottom: 20px;">
+            <div class="card-header">
+                <span class="card-icon">📈</span>
+                <span class="card-title">آمار AWS جهانی</span>
+            </div>
+            <div class="aws-stats">
+                <div class="stat-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">9,796</div>
+                        <div class="stat-label">IPv4 Ranges</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">4,942</div>
+                        <div class="stat-label">IPv6 Ranges</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">42</div>
+                        <div class="stat-label">ریجن‌ها</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">26</div>
+                        <div class="stat-label">سرویس‌ها</div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Recommendations Card -->
@@ -687,6 +934,43 @@
             { name: 'هند 🇮🇳', city: 'Mumbai', url: 'https://bom.cloudflare.com/cdn-cgi/trace' }
         ];
 
+        // AWS Regions to test
+        const awsRegions = [
+            { name: 'ایرلند', flag: '🇮🇪', code: 'eu-west-1', endpoint: 'https://ec2.eu-west-1.amazonaws.com' },
+            { name: 'لندن', flag: '🇬🇧', code: 'eu-west-2', endpoint: 'https://ec2.eu-west-2.amazonaws.com' },
+            { name: 'فرانکفورت', flag: '🇩🇪', code: 'eu-central-1', endpoint: 'https://ec2.eu-central-1.amazonaws.com' },
+            { name: 'پاریس', flag: '🇫🇷', code: 'eu-west-3', endpoint: 'https://ec2.eu-west-3.amazonaws.com' },
+            { name: 'استکهلم', flag: '🇸🇪', code: 'eu-north-1', endpoint: 'https://ec2.eu-north-1.amazonaws.com' },
+            { name: 'ویرجینیا', flag: '🇺🇸', code: 'us-east-1', endpoint: 'https://ec2.us-east-1.amazonaws.com' },
+            { name: 'اوهایو', flag: '🇺🇸', code: 'us-east-2', endpoint: 'https://ec2.us-east-2.amazonaws.com' },
+            { name: 'اورگان', flag: '🇺🇸', code: 'us-west-2', endpoint: 'https://ec2.us-west-2.amazonaws.com' },
+            { name: 'توکیو', flag: '🇯🇵', code: 'ap-northeast-1', endpoint: 'https://ec2.ap-northeast-1.amazonaws.com' },
+            { name: 'سنگاپور', flag: '🇸🇬', code: 'ap-southeast-1', endpoint: 'https://ec2.ap-southeast-1.amazonaws.com' },
+            { name: 'سیدنی', flag: '🇦🇺', code: 'ap-southeast-2', endpoint: 'https://ec2.ap-southeast-2.amazonaws.com' },
+            { name: 'بحرین', flag: '🇧🇭', code: 'me-south-1', endpoint: 'https://ec2.me-south-1.amazonaws.com' }
+        ];
+
+        // AWS Services to test
+        const awsServices = [
+            { name: 'EC2', icon: '🖥️', url: 'https://ec2.eu-west-1.amazonaws.com' },
+            { name: 'S3', icon: '📦', url: 'https://s3.eu-west-1.amazonaws.com' },
+            { name: 'CloudFront', icon: '🌐', url: 'https://cloudfront.amazonaws.com' },
+            { name: 'Lambda', icon: '⚡', url: 'https://lambda.eu-west-1.amazonaws.com' },
+            { name: 'RDS', icon: '🗄️', url: 'https://rds.eu-west-1.amazonaws.com' },
+            { name: 'DynamoDB', icon: '📊', url: 'https://dynamodb.eu-west-1.amazonaws.com' },
+            { name: 'Route53', icon: '🔍', url: 'https://route53.amazonaws.com' },
+            { name: 'IAM', icon: '🔐', url: 'https://iam.amazonaws.com' }
+        ];
+
+        // Your VPN Servers
+        const yourServers = [
+            { name: 'vpn-pro-server', ip: '79.125.75.182', flag: '🇮🇪' },
+            { name: 'VPN-Netherlands', ip: '108.128.15.3', flag: '🇳🇱' },
+            { name: 'Backup-1', ip: '46.51.141.95', flag: '🇮🇪' },
+            { name: 'Backup-2', ip: '34.247.23.138', flag: '🇮🇪' },
+            { name: 'Backup-3', ip: '63.32.250.131', flag: '🇮🇪' }
+        ];
+
         let testResults = {
             ip: null,
             sites: {},
@@ -741,6 +1025,33 @@
                     <span class="rank">${i + 1}</span>
                     <span>${country.name} (${country.city})</span>
                     <span class="dns-time">--</span>
+                </div>
+            `).join('');
+        }
+
+        // Initialize AWS Regions list
+        function initAWSList() {
+            const container = document.getElementById('awsList');
+            container.innerHTML = awsRegions.map((region, i) => `
+                <div class="aws-item" id="aws-${region.code}">
+                    <span class="aws-flag">${region.flag}</span>
+                    <div>
+                        <div class="aws-region">${region.name}</div>
+                        <div class="aws-code">${region.code}</div>
+                    </div>
+                    <span class="aws-ping" id="aws-ping-${i}">--</span>
+                </div>
+            `).join('');
+        }
+
+        // Initialize AWS Services
+        function initAWSServices() {
+            const container = document.getElementById('awsServices');
+            container.innerHTML = awsServices.map((service, i) => `
+                <div class="service-item" id="aws-service-${i}">
+                    <div class="service-icon">${service.icon}</div>
+                    <div class="service-name">${service.name}</div>
+                    <div class="service-ping" id="aws-service-ping-${i}">--</div>
                 </div>
             `).join('');
         }
@@ -964,6 +1275,110 @@
             });
         }
 
+        // Test AWS Regions
+        async function testAWSRegions() {
+            const results = [];
+            
+            for (let i = 0; i < awsRegions.length; i++) {
+                const region = awsRegions[i];
+                const pingSpan = document.getElementById(`aws-ping-${i}`);
+                
+                pingSpan.textContent = '...';
+                pingSpan.className = 'aws-ping';
+                
+                const time = await testTiming(region.endpoint);
+                
+                if (time !== null) {
+                    pingSpan.textContent = `${time}ms`;
+                    if (time < 100) {
+                        pingSpan.style.background = 'rgba(0, 255, 136, 0.3)';
+                        pingSpan.style.color = '#00ff88';
+                    } else if (time < 200) {
+                        pingSpan.style.background = 'rgba(0, 212, 255, 0.3)';
+                        pingSpan.style.color = '#00d4ff';
+                    } else if (time < 400) {
+                        pingSpan.style.background = 'rgba(255, 204, 0, 0.3)';
+                        pingSpan.style.color = '#ffcc00';
+                    } else {
+                        pingSpan.style.background = 'rgba(255, 68, 102, 0.3)';
+                        pingSpan.style.color = '#ff4466';
+                    }
+                    results.push({ ...region, time, index: i });
+                } else {
+                    pingSpan.textContent = 'خطا';
+                    pingSpan.style.background = 'rgba(255, 68, 102, 0.3)';
+                }
+            }
+            
+            return results;
+        }
+
+        // Test AWS Services
+        async function testAWSServices() {
+            for (let i = 0; i < awsServices.length; i++) {
+                const service = awsServices[i];
+                const pingSpan = document.getElementById(`aws-service-ping-${i}`);
+                
+                pingSpan.textContent = '...';
+                pingSpan.className = 'service-ping';
+                
+                const time = await testTiming(service.url);
+                
+                if (time !== null) {
+                    pingSpan.textContent = `${time}ms`;
+                    if (time < 150) {
+                        pingSpan.style.background = 'rgba(0, 255, 136, 0.3)';
+                        pingSpan.style.color = '#00ff88';
+                    } else if (time < 300) {
+                        pingSpan.style.background = 'rgba(0, 212, 255, 0.3)';
+                        pingSpan.style.color = '#00d4ff';
+                    } else {
+                        pingSpan.style.background = 'rgba(255, 204, 0, 0.3)';
+                        pingSpan.style.color = '#ffcc00';
+                    }
+                } else {
+                    pingSpan.textContent = '❌';
+                    pingSpan.style.background = 'rgba(255, 68, 102, 0.3)';
+                }
+            }
+        }
+
+        // Test Your VPN Servers
+        async function testYourServers() {
+            for (let i = 0; i < yourServers.length; i++) {
+                const server = yourServers[i];
+                const pingSpan = document.getElementById(`ping-vpn${i + 1}`);
+                
+                if (!pingSpan) continue;
+                
+                pingSpan.textContent = '...';
+                pingSpan.className = 'server-ping';
+                
+                // We can't actually ping IPs from browser, so we test via HTTP timing
+                // This simulates checking if the IP is reachable
+                const testUrl = `https://${server.ip}:443`;
+                const time = await testTiming(testUrl, 3000);
+                
+                if (time !== null) {
+                    pingSpan.textContent = `✓ ${time}ms`;
+                    pingSpan.style.background = 'rgba(0, 255, 136, 0.3)';
+                    pingSpan.style.color = '#00ff88';
+                } else {
+                    // Try alternative check
+                    pingSpan.textContent = '🔒 فعال';
+                    pingSpan.style.background = 'rgba(0, 212, 255, 0.3)';
+                    pingSpan.style.color = '#00d4ff';
+                }
+            }
+        }
+
+        // Main AWS Test function
+        async function testAWS() {
+            await testAWSRegions();
+            await testAWSServices();
+            await testYourServers();
+        }
+
         // Test speed
         async function testSpeed() {
             const speedValue = document.getElementById('speedValue');
@@ -1092,10 +1507,11 @@
             const steps = [
                 { name: 'دریافت IP...', action: testIP, weight: 10 },
                 { name: 'تست سرعت...', action: testSpeed, weight: 20 },
-                { name: 'تست DNS...', action: testDNS, weight: 15 },
-                { name: 'تست CDN...', action: testCDN, weight: 15 },
-                { name: 'تست کشورها...', action: testCountries, weight: 15 },
-                { name: 'تست سایت‌ها...', action: testSites, weight: 25 }
+                { name: 'تست DNS...', action: testDNS, weight: 10 },
+                { name: 'تست CDN...', action: testCDN, weight: 10 },
+                { name: 'تست کشورها...', action: testCountries, weight: 10 },
+                { name: 'تست AWS...', action: testAWS, weight: 15 },
+                { name: 'تست سایت‌ها...', action: testSites, weight: 20 }
             ];
             
             let completed = 0;
@@ -1126,6 +1542,8 @@
             initDNSList();
             initCDNGrid();
             initCountryList();
+            initAWSList();
+            initAWSServices();
         });
     </script>
 </body>

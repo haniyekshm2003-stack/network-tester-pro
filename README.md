@@ -16,6 +16,7 @@
 ## 🚀 نحوه استفاده
 
 ### روش 1: GitHub Pages
+
 1. این ریپو را Fork کنید
 2. به Settings > Pages بروید
 3. Source را روی `main` branch و `/root` بگذارید
@@ -23,6 +24,7 @@
 5. از آدرس `https://YOUR-USERNAME.github.io/network-tester-web` استفاده کنید
 
 ### روش 2: باز کردن مستقیم
+
 فایل `index.html` را در مرورگر باز کنید.
 
 ## 📸 اسکرین‌شات
