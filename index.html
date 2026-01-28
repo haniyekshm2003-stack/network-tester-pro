@@ -1089,6 +1089,20 @@
                         🔄 بروزرسانی
                     </button>
                 </div>
+                
+                <!-- VPN Warning Banner -->
+                <div id="vpnWarningBanner" style="display: none; margin-bottom: 15px; padding: 15px; background: linear-gradient(135deg, #00ff88, #00cc66); border-radius: 10px; text-align: center;">
+                    <p style="color: #000; font-weight: bold; margin: 0; font-size: 1.1em;">
+                        ✅ VPN فعال است! IP سرور VPN نمایش داده می‌شود
+                    </p>
+                </div>
+                
+                <div id="iranWarningBanner" style="display: none; margin-bottom: 15px; padding: 15px; background: linear-gradient(135deg, #ff4466, #cc0033); border-radius: 10px; text-align: center;">
+                    <p style="color: #fff; font-weight: bold; margin: 0; font-size: 1.1em;">
+                        ⚠️ شما با IP ایران متصل هستید! برخی سایت‌ها فیلتر هستند
+                    </p>
+                </div>
+                
                 <div class="ip-info" id="ipInfo">
                     <div class="ip-row" style="background: linear-gradient(90deg, rgba(0,212,255,0.1), transparent); padding: 12px; border-radius: 8px;">
                         <span class="ip-label" style="font-weight: bold;">🌐 IP فعلی</span>
@@ -1113,7 +1127,7 @@
                 </div>
                 <div style="margin-top: 15px; padding: 12px; background: rgba(255,204,0,0.1); border-radius: 8px; border-right: 3px solid #ffcc00;">
                     <p style="color: #ffcc00; font-size: 0.9em; margin: 0;">
-                        💡 <strong>توجه:</strong> این IP فعلی شماست. اگر VPN روشن باشد، IP سرور VPN نمایش داده می‌شود.
+                        💡 <strong>نکته:</strong> برای تست واقعی از ایران، VPN را خاموش کنید و صفحه را رفرش کنید.
                     </p>
                 </div>
             </div>
@@ -1787,6 +1801,12 @@
                     
                     const vpnRow = document.getElementById('vpnStatus');
                     const vpnText = document.getElementById('vpnStatusText');
+                    const vpnBanner = document.getElementById('vpnWarningBanner');
+                    const iranBanner = document.getElementById('iranWarningBanner');
+                    
+                    // Hide both banners first
+                    vpnBanner.style.display = 'none';
+                    iranBanner.style.display = 'none';
                     
                     if (data.country_code === 'IR') {
                         vpnRow.classList.remove('vpn-active');
@@ -1794,15 +1814,23 @@
                         vpnText.innerHTML = '❌ غیرفعال - <span style="color: #ffcc00;">IP ایران</span>';
                         vpnText.style.color = '#ff4466';
                         
-                        // Show warning for Iran users
-                        showNotification('⚠️ شما با IP ایران متصل هستید. برخی سرویس‌ها ممکن است فیلتر باشند.', 'warning');
+                        // Show Iran warning banner
+                        iranBanner.style.display = 'block';
+                        
+                        // Update IP display to show it's Iran
+                        document.getElementById('ipAddress').innerHTML = `<span style="color: #ff4466;">${data.ip}</span> <span style="background: #ff4466; color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.8em;">🇮🇷 ایران</span>`;
+                        
                     } else {
                         vpnRow.classList.remove('vpn-inactive');
                         vpnRow.classList.add('vpn-active');
-                        vpnText.innerHTML = `✅ فعال - <span style="color: #00ff88;">${data.country_name}</span>`;
+                        vpnText.innerHTML = `✅ فعال - <span style="color: #00ff88;">${data.country_name} ${getCountryFlag(data.country_code)}</span>`;
                         vpnText.style.color = '#00ff88';
                         
-                        showNotification(`✅ VPN فعال است. IP شما: ${data.country_name}`, 'success');
+                        // Show VPN active banner
+                        vpnBanner.style.display = 'block';
+                        
+                        // Update IP display to show VPN
+                        document.getElementById('ipAddress').innerHTML = `<span style="color: #00ff88;">${data.ip}</span> <span style="background: #00ff88; color: black; padding: 2px 8px; border-radius: 4px; font-size: 0.8em;">🔒 VPN</span>`;
                     }
                     
                     testResults.ip = data;
