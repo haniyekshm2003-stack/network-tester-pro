@@ -1444,45 +1444,45 @@
                         </tr>
                     </thead>
                     <tbody id="ipTableBody">
-                        <tr data-ip="79.125.75.182">
+                        <tr data-ip="79.125.75.182" data-idx="0">
                             <td class="ip-cell">79.125.75.182</td>
                             <td><span class="badge public">Public</span></td>
                             <td>vpn-pro-server</td>
-                            <td class="ping-cell" id="ping-79.125.75.182">--</td>
-                            <td class="ports-cell" id="ports-79.125.75.182">--</td>
-                            <td class="status-cell" id="status-79.125.75.182">⏳</td>
+                            <td class="ping-cell" id="ping-0">--</td>
+                            <td class="ports-cell" id="ports-0">--</td>
+                            <td class="status-cell" id="status-0">⏳</td>
                         </tr>
-                        <tr data-ip="108.128.15.3">
+                        <tr data-ip="108.128.15.3" data-idx="1">
                             <td class="ip-cell">108.128.15.3</td>
                             <td><span class="badge public">Public</span></td>
                             <td>VPN-Netherlands</td>
-                            <td class="ping-cell" id="ping-108.128.15.3">--</td>
-                            <td class="ports-cell" id="ports-108.128.15.3">--</td>
-                            <td class="status-cell" id="status-108.128.15.3">⏳</td>
+                            <td class="ping-cell" id="ping-1">--</td>
+                            <td class="ports-cell" id="ports-1">--</td>
+                            <td class="status-cell" id="status-1">⏳</td>
                         </tr>
-                        <tr data-ip="46.51.141.95">
+                        <tr data-ip="46.51.141.95" data-idx="2">
                             <td class="ip-cell">46.51.141.95</td>
                             <td><span class="badge elastic">Elastic IP</span></td>
                             <td>Backup-1</td>
-                            <td class="ping-cell" id="ping-46.51.141.95">--</td>
-                            <td class="ports-cell" id="ports-46.51.141.95">--</td>
-                            <td class="status-cell" id="status-46.51.141.95">⏳</td>
+                            <td class="ping-cell" id="ping-2">--</td>
+                            <td class="ports-cell" id="ports-2">--</td>
+                            <td class="status-cell" id="status-2">⏳</td>
                         </tr>
-                        <tr data-ip="34.247.23.138">
+                        <tr data-ip="34.247.23.138" data-idx="3">
                             <td class="ip-cell">34.247.23.138</td>
                             <td><span class="badge elastic">Elastic IP</span></td>
                             <td>Backup-2</td>
-                            <td class="ping-cell" id="ping-34.247.23.138">--</td>
-                            <td class="ports-cell" id="ports-34.247.23.138">--</td>
-                            <td class="status-cell" id="status-34.247.23.138">⏳</td>
+                            <td class="ping-cell" id="ping-3">--</td>
+                            <td class="ports-cell" id="ports-3">--</td>
+                            <td class="status-cell" id="status-3">⏳</td>
                         </tr>
-                        <tr data-ip="63.32.250.131">
+                        <tr data-ip="63.32.250.131" data-idx="4">
                             <td class="ip-cell">63.32.250.131</td>
                             <td><span class="badge elastic">Elastic IP</span></td>
                             <td>Backup-3</td>
-                            <td class="ping-cell" id="ping-63.32.250.131">--</td>
-                            <td class="ports-cell" id="ports-63.32.250.131">--</td>
-                            <td class="status-cell" id="status-63.32.250.131">⏳</td>
+                            <td class="ping-cell" id="ping-4">--</td>
+                            <td class="ports-cell" id="ports-4">--</td>
+                            <td class="status-cell" id="status-4">⏳</td>
                         </tr>
                     </tbody>
                 </table>
@@ -2219,65 +2219,73 @@
             { port: 2083, name: 'V2Ray' }
         ];
         
-        // Scan a single IP for ping
+        // Scan a single IP for ping using Image load technique
         async function scanIPPing(ip) {
-            const start = performance.now();
-            try {
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 5000);
+            return new Promise((resolve) => {
+                const start = performance.now();
+                const img = new Image();
+                let resolved = false;
                 
-                // Try HTTPS first
-                await fetch(`https://${ip}:443`, {
-                    mode: 'no-cors',
-                    signal: controller.signal
-                });
+                const timeout = setTimeout(() => {
+                    if (!resolved) {
+                        resolved = true;
+                        // Even on timeout, the connection attempt gives us timing info
+                        const elapsed = performance.now() - start;
+                        if (elapsed < 4500) {
+                            resolve(Math.round(elapsed));
+                        } else {
+                            resolve(null);
+                        }
+                    }
+                }, 5000);
                 
-                clearTimeout(timeoutId);
-                return Math.round(performance.now() - start);
-            } catch (e) {
-                // Try HTTP
-                try {
-                    const controller2 = new AbortController();
-                    const timeoutId2 = setTimeout(() => controller2.abort(), 3000);
-                    
-                    await fetch(`http://${ip}:80`, {
-                        mode: 'no-cors',
-                        signal: controller2.signal
-                    });
-                    
-                    clearTimeout(timeoutId2);
-                    return Math.round(performance.now() - start);
-                } catch (e2) {
-                    return null;
-                }
-            }
+                img.onload = img.onerror = () => {
+                    if (!resolved) {
+                        resolved = true;
+                        clearTimeout(timeout);
+                        resolve(Math.round(performance.now() - start));
+                    }
+                };
+                
+                // Random port to avoid caching
+                img.src = `https://${ip}:443/favicon.ico?t=${Date.now()}`;
+            });
         }
         
-        // Scan a port on an IP
+        // Scan a port on an IP using fetch with timing
         async function scanPort(ip, port) {
-            const start = performance.now();
-            try {
+            return new Promise((resolve) => {
+                const start = performance.now();
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 2000);
                 
-                const protocol = port === 443 || port === 8443 || port === 2083 ? 'https' : 'http';
+                const timeout = setTimeout(() => {
+                    controller.abort();
+                    resolve({ open: false, time: null });
+                }, 2500);
                 
-                await fetch(`${protocol}://${ip}:${port}`, {
+                const protocol = (port === 443 || port === 8443 || port === 2083) ? 'https' : 'http';
+                
+                fetch(`${protocol}://${ip}:${port}/`, {
                     mode: 'no-cors',
-                    signal: controller.signal
+                    signal: controller.signal,
+                    cache: 'no-store'
+                })
+                .then(() => {
+                    clearTimeout(timeout);
+                    const time = Math.round(performance.now() - start);
+                    resolve({ open: time < 2000, time });
+                })
+                .catch((e) => {
+                    clearTimeout(timeout);
+                    const time = Math.round(performance.now() - start);
+                    // Fast failure means port responded (even with error)
+                    if (time < 1500 && e.name !== 'AbortError') {
+                        resolve({ open: true, time });
+                    } else {
+                        resolve({ open: false, time: null });
+                    }
                 });
-                
-                clearTimeout(timeoutId);
-                const time = performance.now() - start;
-                return { open: time < 1500, time: Math.round(time) };
-            } catch (e) {
-                if (e.name === 'AbortError') {
-                    return { open: false, time: null };
-                }
-                // In no-cors, we can't distinguish between closed and CORS error
-                const time = performance.now() - start;
-                return { open: time < 1000, time: Math.round(time) };
-            }
+            });
         }
         
         // Full IP scan
@@ -2296,16 +2304,22 @@
             let totalOpenPorts = 0;
             let pings = [];
             
-            for (const ipData of yourIPs) {
+            for (let idx = 0; idx < yourIPs.length; idx++) {
+                const ipData = yourIPs[idx];
                 const ip = ipData.ip;
                 
                 // Update progress
                 scanText.textContent = `در حال اسکن ${ip}...`;
                 
-                // Get ping
-                const pingCell = document.getElementById(`ping-${ip}`);
-                const statusCell = document.getElementById(`status-${ip}`);
-                const portsCell = document.getElementById(`ports-${ip}`);
+                // Get ping - use index for IDs
+                const pingCell = document.getElementById(`ping-${idx}`);
+                const statusCell = document.getElementById(`status-${idx}`);
+                const portsCell = document.getElementById(`ports-${idx}`);
+                
+                if (!pingCell || !statusCell || !portsCell) {
+                    console.error(`Elements not found for index ${idx}`);
+                    continue;
+                }
                 
                 pingCell.textContent = '...';
                 pingCell.className = 'ping-cell';
