@@ -31,10 +31,10 @@ proxies:
     tls: true
     udp: true
     flow: xtls-rprx-vision
-    servername: www.google.com
+    servername: www.microsoft.com
     reality-opts:
       public-key: psSn6aZembYfCAHBMYrDNfR7qYIr3Uek-2Oe3st1_0g
-      short-id: abc123def456
+      short-id: a1b2c3d4
     client-fingerprint: chrome
 
   # 🌐 IP بکاپ 1
@@ -47,10 +47,10 @@ proxies:
     tls: true
     udp: true
     flow: xtls-rprx-vision
-    servername: www.google.com
+    servername: www.microsoft.com
     reality-opts:
       public-key: psSn6aZembYfCAHBMYrDNfR7qYIr3Uek-2Oe3st1_0g
-      short-id: abc123def456
+      short-id: a1b2c3d4
     client-fingerprint: chrome
 
   # 🌐 IP بکاپ 2
@@ -63,10 +63,10 @@ proxies:
     tls: true
     udp: true
     flow: xtls-rprx-vision
-    servername: www.google.com
+    servername: www.microsoft.com
     reality-opts:
       public-key: psSn6aZembYfCAHBMYrDNfR7qYIr3Uek-2Oe3st1_0g
-      short-id: abc123def456
+      short-id: a1b2c3d4
     client-fingerprint: chrome
 
   # 📡 WebSocket (اگه Reality کار نکرد)
