@@ -1,0 +1,147 @@
+# Clash Verge Pro Configuration
+# VPN Pro - Iran Optimized
+# تاریخ: 29 ژانویه 2026
+
+mixed-port: 7890
+allow-lan: true
+mode: rule
+log-level: info
+external-controller: 127.0.0.1:9090
+
+dns:
+  enable: true
+  listen: 0.0.0.0:53
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  nameserver:
+    - 8.8.8.8
+    - 1.1.1.1
+  fallback:
+    - tls://8.8.8.8:853
+    - tls://1.1.1.1:853
+
+proxies:
+  # 🚀 سرور اصلی - VLESS Reality (سریع‌ترین)
+  - name: "🚀 VPN-Pro-Reality"
+    type: vless
+    server: 108.128.15.3
+    port: 443
+    uuid: b393ccbc-1415-4a80-aa67-0fbecd48dfc1
+    network: tcp
+    tls: true
+    udp: true
+    flow: xtls-rprx-vision
+    servername: www.google.com
+    reality-opts:
+      public-key: psSn6aZembYfCAHBMYrDNfR7qYIr3Uek-2Oe3st1_0g
+      short-id: abc123def456
+    client-fingerprint: chrome
+
+  # 🌐 IP بکاپ 1
+  - name: "🌐 VPN-IP2-Reality"
+    type: vless
+    server: 63.32.250.131
+    port: 443
+    uuid: b393ccbc-1415-4a80-aa67-0fbecd48dfc1
+    network: tcp
+    tls: true
+    udp: true
+    flow: xtls-rprx-vision
+    servername: www.google.com
+    reality-opts:
+      public-key: psSn6aZembYfCAHBMYrDNfR7qYIr3Uek-2Oe3st1_0g
+      short-id: abc123def456
+    client-fingerprint: chrome
+
+  # 🌐 IP بکاپ 2
+  - name: "🌐 VPN-IP3-Reality"
+    type: vless
+    server: 34.247.23.138
+    port: 443
+    uuid: b393ccbc-1415-4a80-aa67-0fbecd48dfc1
+    network: tcp
+    tls: true
+    udp: true
+    flow: xtls-rprx-vision
+    servername: www.google.com
+    reality-opts:
+      public-key: psSn6aZembYfCAHBMYrDNfR7qYIr3Uek-2Oe3st1_0g
+      short-id: abc123def456
+    client-fingerprint: chrome
+
+  # 📡 WebSocket (اگه Reality کار نکرد)
+  - name: "📡 VPN-WebSocket"
+    type: vless
+    server: 108.128.15.3
+    port: 8443
+    uuid: b393ccbc-1415-4a80-aa67-0fbecd48dfc1
+    network: ws
+    tls: false
+    udp: true
+    ws-opts:
+      path: /vless
+
+proxy-groups:
+  - name: "🔰 انتخاب پروکسی"
+    type: select
+    proxies:
+      - "🚀 VPN-Pro-Reality"
+      - "🌐 VPN-IP2-Reality"
+      - "🌐 VPN-IP3-Reality"
+      - "📡 VPN-WebSocket"
+      - "♻️ بهترین پینگ"
+      - DIRECT
+
+  - name: "♻️ بهترین پینگ"
+    type: url-test
+    proxies:
+      - "🚀 VPN-Pro-Reality"
+      - "🌐 VPN-IP2-Reality"
+      - "🌐 VPN-IP3-Reality"
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+
+  - name: "📺 استریم"
+    type: select
+    proxies:
+      - "🔰 انتخاب پروکسی"
+      - "🚀 VPN-Pro-Reality"
+      - DIRECT
+
+  - name: "💬 پیام‌رسان"
+    type: select
+    proxies:
+      - "🔰 انتخاب پروکسی"
+      - "🚀 VPN-Pro-Reality"
+
+rules:
+  # سایت‌های ایرانی - مستقیم
+  - DOMAIN-SUFFIX,ir,DIRECT
+  - DOMAIN-KEYWORD,iran,DIRECT
+  
+  # تلگرام
+  - DOMAIN-SUFFIX,telegram.org,💬 پیام‌رسان
+  - DOMAIN-SUFFIX,t.me,💬 پیام‌رسان
+  - IP-CIDR,91.108.0.0/16,💬 پیام‌رسان
+  - IP-CIDR,149.154.0.0/16,💬 پیام‌رسان
+  
+  # واتساپ
+  - DOMAIN-SUFFIX,whatsapp.com,💬 پیام‌رسان
+  - DOMAIN-SUFFIX,whatsapp.net,💬 پیام‌رسان
+  
+  # یوتیوب و گوگل
+  - DOMAIN-SUFFIX,youtube.com,📺 استریم
+  - DOMAIN-SUFFIX,googlevideo.com,📺 استریم
+  - DOMAIN-SUFFIX,ytimg.com,📺 استریم
+  
+  # اینستاگرام
+  - DOMAIN-SUFFIX,instagram.com,📺 استریم
+  - DOMAIN-SUFFIX,cdninstagram.com,📺 استریم
+  
+  # توییتر
+  - DOMAIN-SUFFIX,twitter.com,📺 استریم
+  - DOMAIN-SUFFIX,x.com,📺 استریم
+  - DOMAIN-SUFFIX,twimg.com,📺 استریم
+  
+  # سایر
+  - MATCH,🔰 انتخاب پروکسی
