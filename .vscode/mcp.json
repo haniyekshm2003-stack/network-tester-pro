@@ -1,0 +1,99 @@
+{
+  "servers": {
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-filesystem"],
+      "env": {
+        "ALLOWED_PATHS": "/workspaces,/home,/tmp"
+      }
+    },
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-github"],
+      "env": {
+        "GITHUB_TOKEN": "${env:GITHUB_TOKEN}"
+      }
+    },
+    "fetch": {
+      "command": "npx", 
+      "args": ["-y", "@anthropic/mcp-fetch"]
+    },
+    "memory": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-memory"]
+    },
+    "time": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-time"]
+    },
+    "brave-search": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-brave-search"],
+      "env": {
+        "BRAVE_API_KEY": "${env:BRAVE_API_KEY}"
+      }
+    },
+    "sqlite": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-sqlite"],
+      "env": {
+        "DB_PATH": "/workspaces/network-tester-pro/data.db"
+      }
+    },
+    "puppeteer": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-puppeteer"]
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-sequential-thinking"]
+    },
+    "slack": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-slack"],
+      "env": {
+        "SLACK_TOKEN": "${env:SLACK_TOKEN}"
+      }
+    },
+    "google-drive": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-google-drive"]
+    },
+    "postgres": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-postgres"],
+      "env": {
+        "DATABASE_URL": "${env:DATABASE_URL}"
+      }
+    },
+    "docker": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-docker"]
+    },
+    "kubernetes": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-kubernetes"]
+    },
+    "aws": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-aws"]
+    },
+    "azure": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-azure"]
+    },
+    "cloudflare": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-cloudflare"]
+    },
+    "ssh": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-ssh"]
+    },
+    "terminal": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-terminal"]
+    }
+  },
+  "inputs": []
+}

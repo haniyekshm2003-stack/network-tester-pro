@@ -1,0 +1,182 @@
+[
+  // ═══════════════════════════════════════════════════════════════════════════
+  // 🚀 GITHUB COPILOT PRO - KEYBOARD SHORTCUTS
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  // ────────────────────────────────────────────────────────────────────────────
+  // 💬 COPILOT CHAT
+  // ────────────────────────────────────────────────────────────────────────────
+  {
+    "key": "ctrl+shift+i",
+    "command": "workbench.action.chat.open",
+    "when": "!chatIsVisible"
+  },
+  {
+    "key": "ctrl+shift+i",
+    "command": "workbench.action.chat.focus",
+    "when": "chatIsVisible"
+  },
+  {
+    "key": "ctrl+i",
+    "command": "inlineChat.start",
+    "when": "editorFocus && !editorReadonly"
+  },
+
+  // ────────────────────────────────────────────────────────────────────────────
+  // ⚡ INLINE SUGGESTIONS
+  // ────────────────────────────────────────────────────────────────────────────
+  {
+    "key": "tab",
+    "command": "editor.action.inlineSuggest.commit",
+    "when": "inlineSuggestionVisible && !editorHoverFocused && !suggestWidgetVisible"
+  },
+  {
+    "key": "alt+]",
+    "command": "editor.action.inlineSuggest.showNext",
+    "when": "inlineSuggestionVisible"
+  },
+  {
+    "key": "alt+[",
+    "command": "editor.action.inlineSuggest.showPrevious",
+    "when": "inlineSuggestionVisible"
+  },
+  {
+    "key": "ctrl+right",
+    "command": "editor.action.inlineSuggest.acceptNextWord",
+    "when": "inlineSuggestionVisible"
+  },
+  {
+    "key": "ctrl+shift+right",
+    "command": "editor.action.inlineSuggest.acceptNextLine",
+    "when": "inlineSuggestionVisible"
+  },
+  {
+    "key": "escape",
+    "command": "editor.action.inlineSuggest.hide",
+    "when": "inlineSuggestionVisible"
+  },
+  {
+    "key": "alt+\\",
+    "command": "editor.action.inlineSuggest.trigger",
+    "when": "editorFocus && !inlineSuggestionVisible"
+  },
+
+  // ────────────────────────────────────────────────────────────────────────────
+  // 🔧 QUICK ACTIONS
+  // ────────────────────────────────────────────────────────────────────────────
+  {
+    "key": "ctrl+shift+alt+e",
+    "command": "github.copilot.chat.explain"
+  },
+  {
+    "key": "ctrl+shift+alt+f",
+    "command": "github.copilot.chat.fix"
+  },
+  {
+    "key": "ctrl+shift+alt+t",
+    "command": "github.copilot.chat.generateTests"
+  },
+  {
+    "key": "ctrl+shift+alt+d",
+    "command": "github.copilot.chat.generateDocs"
+  },
+  {
+    "key": "ctrl+shift+alt+r",
+    "command": "github.copilot.chat.review"
+  },
+  {
+    "key": "ctrl+shift+alt+o",
+    "command": "github.copilot.chat.optimize"
+  },
+
+  // ────────────────────────────────────────────────────────────────────────────
+  // 🖥️ TERMINAL
+  // ────────────────────────────────────────────────────────────────────────────
+  {
+    "key": "ctrl+shift+`",
+    "command": "workbench.action.terminal.toggleTerminal"
+  },
+  {
+    "key": "ctrl+shift+alt+c",
+    "command": "workbench.action.terminal.chat.start",
+    "when": "terminalFocus"
+  },
+
+  // ────────────────────────────────────────────────────────────────────────────
+  // 📝 EDITOR
+  // ────────────────────────────────────────────────────────────────────────────
+  {
+    "key": "ctrl+shift+/",
+    "command": "editor.action.blockComment",
+    "when": "editorTextFocus"
+  },
+  {
+    "key": "ctrl+d",
+    "command": "editor.action.addSelectionToNextFindMatch"
+  },
+  {
+    "key": "ctrl+shift+l",
+    "command": "editor.action.selectHighlights"
+  },
+  {
+    "key": "alt+up",
+    "command": "editor.action.moveLinesUpAction"
+  },
+  {
+    "key": "alt+down",
+    "command": "editor.action.moveLinesDownAction"
+  },
+  {
+    "key": "shift+alt+up",
+    "command": "editor.action.copyLinesUpAction"
+  },
+  {
+    "key": "shift+alt+down",
+    "command": "editor.action.copyLinesDownAction"
+  },
+
+  // ────────────────────────────────────────────────────────────────────────────
+  // 🔍 NAVIGATION
+  // ────────────────────────────────────────────────────────────────────────────
+  {
+    "key": "ctrl+p",
+    "command": "workbench.action.quickOpen"
+  },
+  {
+    "key": "ctrl+shift+p",
+    "command": "workbench.action.showCommands"
+  },
+  {
+    "key": "ctrl+shift+o",
+    "command": "workbench.action.gotoSymbol"
+  },
+  {
+    "key": "ctrl+t",
+    "command": "workbench.action.showAllSymbols"
+  },
+  {
+    "key": "f12",
+    "command": "editor.action.revealDefinition"
+  },
+  {
+    "key": "alt+f12",
+    "command": "editor.action.peekDefinition"
+  },
+  {
+    "key": "shift+f12",
+    "command": "editor.action.goToReferences"
+  },
+
+  // ────────────────────────────────────────────────────────────────────────────
+  // 🔀 GIT
+  // ────────────────────────────────────────────────────────────────────────────
+  {
+    "key": "ctrl+shift+g",
+    "command": "workbench.view.scm"
+  },
+  {
+    "key": "ctrl+enter",
+    "command": "git.commitMessageAccept",
+    "when": "scmInputBoxFocus"
+  }
+]

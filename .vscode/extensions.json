@@ -1,0 +1,61 @@
+{
+  "recommendations": [
+    // 🤖 AI & Copilot
+    "github.copilot",
+    "github.copilot-chat",
+    "ms-azuretools.vscode-azure-github-copilot",
+
+    // 🎨 Themes & Icons
+    "pkief.material-icon-theme",
+    "zhuangtongfa.material-theme",
+
+    // 📝 Editing Enhancements
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "editorconfig.editorconfig",
+    "christian-kohler.path-intellisense",
+    "formulahendry.auto-rename-tag",
+    "formulahendry.auto-close-tag",
+    "naumovs.color-highlight",
+    "oderwat.indent-rainbow",
+    "aaron-bond.better-comments",
+    "wayou.vscode-todo-highlight",
+    "gruntfuggly.todo-tree",
+
+    // 🔧 Development Tools
+    "usernamehw.errorlens",
+    "streetsidesoftware.code-spell-checker",
+    "eamodio.gitlens",
+    "mhutchie.git-graph",
+    "donjayamanne.githistory",
+
+    // 🐍 Python
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "ms-python.debugpy",
+
+    // 📦 JavaScript/TypeScript
+    "ms-vscode.vscode-typescript-next",
+    "pmneo.tsimporter",
+
+    // 🐚 Shell Scripts
+    "timonwong.shellcheck",
+    "foxundermoon.shell-format",
+    "mads-hartmann.bash-ide-vscode",
+
+    // 🐳 Docker & DevOps
+    "ms-azuretools.vscode-docker",
+    "ms-vscode-remote.remote-containers",
+    "redhat.vscode-yaml",
+
+    // 📊 Data & APIs
+    "humao.rest-client",
+    "mechatroner.rainbow-csv",
+
+    // 📖 Markdown
+    "yzhang.markdown-all-in-one",
+    "bierner.markdown-preview-github-styles",
+    "davidanson.vscode-markdownlint"
+  ],
+  "unwantedRecommendations": []
+}
