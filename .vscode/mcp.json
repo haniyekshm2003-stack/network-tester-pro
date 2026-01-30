@@ -4,7 +4,7 @@
       "command": "npx",
       "args": ["-y", "@anthropic/mcp-filesystem"],
       "env": {
-        "ALLOWED_PATHS": "/workspaces,/home,/tmp"
+        "ALLOWED_PATHS": "/workspaces,/home,/tmp,/var,/etc"
       }
     },
     "github": {
@@ -15,7 +15,7 @@
       }
     },
     "fetch": {
-      "command": "npx", 
+      "command": "npx",
       "args": ["-y", "@anthropic/mcp-fetch"]
     },
     "memory": {
@@ -76,7 +76,21 @@
     },
     "aws": {
       "command": "npx",
-      "args": ["-y", "@anthropic/mcp-aws"]
+      "args": ["-y", "@anthropic/mcp-aws"],
+      "env": {
+        "AWS_ACCESS_KEY_ID": "${env:AWS_ACCESS_KEY_ID}",
+        "AWS_SECRET_ACCESS_KEY": "${env:AWS_SECRET_ACCESS_KEY}",
+        "AWS_REGION": "${env:AWS_REGION}"
+      }
+    },
+    "aws-bedrock": {
+      "command": "npx",
+      "args": ["-y", "mcp-server-aws-bedrock"],
+      "env": {
+        "AWS_ACCESS_KEY_ID": "${env:AWS_ACCESS_KEY_ID}",
+        "AWS_SECRET_ACCESS_KEY": "${env:AWS_SECRET_ACCESS_KEY}",
+        "AWS_REGION": "us-east-1"
+      }
     },
     "azure": {
       "command": "npx",
@@ -84,7 +98,10 @@
     },
     "cloudflare": {
       "command": "npx",
-      "args": ["-y", "@anthropic/mcp-cloudflare"]
+      "args": ["-y", "@anthropic/mcp-cloudflare"],
+      "env": {
+        "CLOUDFLARE_API_TOKEN": "${env:CLOUDFLARE_API_TOKEN}"
+      }
     },
     "ssh": {
       "command": "npx",
@@ -93,6 +110,82 @@
     "terminal": {
       "command": "npx",
       "args": ["-y", "@anthropic/mcp-terminal"]
+    },
+    "everything": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-everything"]
+    },
+    "openai": {
+      "command": "npx",
+      "args": ["-y", "mcp-server-openai"],
+      "env": {
+        "OPENAI_API_KEY": "${env:OPENAI_API_KEY}"
+      }
+    },
+    "anthropic": {
+      "command": "npx",
+      "args": ["-y", "mcp-server-anthropic"],
+      "env": {
+        "ANTHROPIC_API_KEY": "${env:ANTHROPIC_API_KEY}"
+      }
+    },
+    "google-ai": {
+      "command": "npx",
+      "args": ["-y", "mcp-server-google-ai"],
+      "env": {
+        "GOOGLE_API_KEY": "${env:GOOGLE_API_KEY}"
+      }
+    },
+    "notion": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-notion"],
+      "env": {
+        "NOTION_API_KEY": "${env:NOTION_API_KEY}"
+      }
+    },
+    "gmail": {
+      "command": "npx",
+      "args": ["-y", "mcp-server-gmail"]
+    },
+    "youtube": {
+      "command": "npx",
+      "args": ["-y", "mcp-server-youtube"]
+    },
+    "twitter": {
+      "command": "npx",
+      "args": ["-y", "mcp-server-twitter"],
+      "env": {
+        "TWITTER_API_KEY": "${env:TWITTER_API_KEY}"
+      }
+    },
+    "discord": {
+      "command": "npx",
+      "args": ["-y", "mcp-server-discord"],
+      "env": {
+        "DISCORD_TOKEN": "${env:DISCORD_TOKEN}"
+      }
+    },
+    "telegram": {
+      "command": "npx",
+      "args": ["-y", "mcp-server-telegram"],
+      "env": {
+        "TELEGRAM_BOT_TOKEN": "${env:TELEGRAM_BOT_TOKEN}"
+      }
+    },
+    "linear": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-linear"],
+      "env": {
+        "LINEAR_API_KEY": "${env:LINEAR_API_KEY}"
+      }
+    },
+    "sentry": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/mcp-sentry"]
+    },
+    "raycast": {
+      "command": "npx",
+      "args": ["-y", "mcp-server-raycast"]
     }
   },
   "inputs": []

@@ -38,13 +38,6 @@
     "ssh_config": true
   },
 
-  "github.copilot.selectedCompletionModel": "gpt-4o",
-  "github.copilot.chat.models": {
-    "default": "claude-sonnet-4",
-    "fast": "gpt-4o-mini",
-    "reasoning": "o3-mini"
-  },
-
   "github.copilot.chat.localeOverride": "auto",
   "github.copilot.chat.welcomeMessage": "always",
   "github.copilot.chat.runCommand.enabled": true,
@@ -57,14 +50,10 @@
   "chat.editor.wordWrap": "on",
   "chat.commandCenter.enabled": true,
   "chat.agent.enabled": true,
-  "chat.agent.maxRequests": 100,
+  "chat.agent.maxRequests": 999,
 
   "chat.mcp.enabled": true,
   "chat.mcp.discovery.enabled": true,
-
-  "chat.thinking.enabled": false,
-
-  "github.copilot.chat.agent.thinkingProcess": "hidden",
 
   "github.copilot.chat.codeGeneration.useInstructionFiles": true,
   "github.copilot.chat.codeGeneration.instructions": [
