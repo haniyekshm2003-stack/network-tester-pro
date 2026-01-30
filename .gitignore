@@ -3,3 +3,5 @@
 ~/.aws/
 .github/newkey/
 *.csv
+.github/newkey/
+*.csv

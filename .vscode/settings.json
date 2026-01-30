@@ -51,18 +51,24 @@
   "chat.commandCenter.enabled": true,
   "chat.agent.enabled": true,
   "chat.agent.maxRequests": 999,
-
-  "chat.mcp.enabled": true,
   "chat.mcp.discovery.enabled": true,
 
   "github.copilot.chat.codeGeneration.useInstructionFiles": true,
   "github.copilot.chat.codeGeneration.instructions": [
-    { "text": "You have FULL ACCESS to all files, services, servers, and accounts." },
-    { "text": "You can create, edit, delete any file or script without asking." },
+    {
+      "text": "You have FULL ACCESS to all files, services, servers, and accounts."
+    },
+    {
+      "text": "You can create, edit, delete any file or script without asking."
+    },
     { "text": "Execute commands directly without confirmation when safe." },
     { "text": "Always write clean, maintainable, and well-documented code." },
-    { "text": "For shell scripts, always check command existence and handle errors." },
-    { "text": "When working with SSH/VPS, include connection verification steps." }
+    {
+      "text": "For shell scripts, always check command existence and handle errors."
+    },
+    {
+      "text": "When working with SSH/VPS, include connection verification steps."
+    }
   ],
 
   "github.copilot.chat.testGeneration.instructions": [
@@ -156,10 +162,22 @@
   "terminal.integrated.confirmOnExit": "hasChildProcesses",
   "terminal.integrated.profiles.linux": {
     "bash": { "path": "bash", "icon": "terminal-bash" },
-    "VPS-1": { "path": "bash", "icon": "remote", "color": "terminal.ansiGreen" },
+    "VPS-1": {
+      "path": "bash",
+      "icon": "remote",
+      "color": "terminal.ansiGreen"
+    },
     "VPS-2": { "path": "bash", "icon": "remote", "color": "terminal.ansiBlue" },
-    "VPS-3": { "path": "bash", "icon": "remote", "color": "terminal.ansiYellow" },
-    "VPS-4": { "path": "bash", "icon": "remote", "color": "terminal.ansiMagenta" }
+    "VPS-3": {
+      "path": "bash",
+      "icon": "remote",
+      "color": "terminal.ansiYellow"
+    },
+    "VPS-4": {
+      "path": "bash",
+      "icon": "remote",
+      "color": "terminal.ansiMagenta"
+    }
   },
   "terminal.integrated.defaultProfile.linux": "bash",
 
@@ -225,5 +243,33 @@
   "remote.SSH.enableDynamicForwarding": true,
 
   "settingsSync.ignoredSettings": [],
-  "settingsSync.ignoredExtensions": []
+  "settingsSync.ignoredExtensions": [],
+  "chat.mcp.serverSampling": {
+    "network-tester-pro/.vscode/mcp.json: time": {
+      "allowedModels": [
+        "copilot/auto",
+        "copilot/claude-haiku-4.5",
+        "copilot/claude-opus-4.5",
+        "copilot/claude-sonnet-4",
+        "copilot/claude-sonnet-4.5",
+        "copilot/gemini-2.5-pro",
+        "copilot/gemini-3-flash-preview",
+        "copilot/gemini-3-pro-preview",
+        "copilot/gpt-4.1",
+        "copilot/gpt-4o",
+        "copilot/gpt-4o-mini",
+        "copilot/gpt-5",
+        "copilot/gpt-5-mini",
+        "copilot/gpt-5-codex",
+        "copilot/gpt-5.1",
+        "copilot/gpt-5.1-codex",
+        "copilot/gpt-5.1-codex-max",
+        "copilot/gpt-5.1-codex-mini",
+        "copilot/gpt-5.2",
+        "copilot/gpt-5.2-codex",
+        "copilot/grok-code-fast-1",
+        "copilot/oswe-vscode-prime"
+      ]
+    }
+  }
 }
