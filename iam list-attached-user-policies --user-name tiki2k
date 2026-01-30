@@ -1,0 +1,24 @@
+{
+    "AttachedPolicies": [
+        {
+            "PolicyName": "AdministratorAccess",
+            "PolicyArn": "arn:aws:iam::aws:policy/AdministratorAccess"
+        },
+        {
+            "PolicyName": "AdministratorAccess-AWSElasticBeanstalk",
+            "PolicyArn": "arn:aws:iam::aws:policy/AdministratorAccess-AWSElasticBeanstalk"
+        },
+        {
+            "PolicyName": "AWSManagementConsoleAdministratorAccess",
+            "PolicyArn": "arn:aws:iam::aws:policy/job-function/AWSManagementConsoleAdministratorAccess"
+        },
+        {
+            "PolicyName": "AdministratorAccess-Amplify",
+            "PolicyArn": "arn:aws:iam::aws:policy/AdministratorAccess-Amplify"
+        },
+        {
+            "PolicyName": "AWSAuditManagerAdministratorAccess",
+            "PolicyArn": "arn:aws:iam::aws:policy/AWSAuditManagerAdministratorAccess"
+        }
+    ]
+}

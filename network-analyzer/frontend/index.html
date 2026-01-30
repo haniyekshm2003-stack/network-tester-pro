@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌐 Network Analyzer Pro</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌐</text></svg>">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <span class="logo">🌐</span>
+            <h1>Network Analyzer</h1>
+            <span class="version">v1.0.0</span>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <a href="#dashboard" class="nav-item active" data-page="dashboard">
+                <span class="icon">📊</span>
+                <span>Dashboard</span>
+            </a>
+            <a href="#network" class="nav-item" data-page="network">
+                <span class="icon">🔍</span>
+                <span>Network Scan</span>
+            </a>
+            <a href="#dns" class="nav-item" data-page="dns">
+                <span class="icon">🌐</span>
+                <span>DNS Benchmark</span>
+            </a>
+            <a href="#cdn" class="nav-item" data-page="cdn">
+                <span class="icon">☁️</span>
+                <span>CDN Test</span>
+            </a>
+            <a href="#ping" class="nav-item" data-page="ping">
+                <span class="icon">🌍</span>
+                <span>Global Ping</span>
+            </a>
+            <a href="#protocol" class="nav-item" data-page="protocol">
+                <span class="icon">📡</span>
+                <span>Protocol Benchmark</span>
+            </a>
+            <a href="#ports" class="nav-item" data-page="ports">
+                <span class="icon">🔌</span>
+                <span>Port Scanner</span>
+            </a>
+            <a href="#recommendations" class="nav-item" data-page="recommendations">
+                <span class="icon">🧠</span>
+                <span>Recommendations</span>
+            </a>
+            <a href="#reports" class="nav-item" data-page="reports">
+                <span class="icon">📄</span>
+                <span>Reports</span>
+            </a>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <div class="status-indicator">
+                <span class="status-dot online"></span>
+                <span>Connected</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="main-header">
+            <div class="header-left">
+                <h2 id="page-title">Dashboard</h2>
+            </div>
+            <div class="header-right">
+                <button class="btn btn-primary" id="run-full-scan">
+                    <span class="icon">🔄</span>
+                    Full Scan
+                </button>
+                <button class="btn btn-secondary" id="export-report">
+                    <span class="icon">📥</span>
+                    Export
+                </button>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <div class="page-content">
+            <!-- Dashboard Page -->
+            <section id="dashboard-page" class="page active">
+                <div class="grid grid-4">
+                    <!-- Score Card -->
+                    <div class="card score-card">
+                        <div class="card-header">
+                            <h3>Network Score</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="score-circle">
+                                <svg viewBox="0 0 100 100" width="140" height="140" style="max-width:140px;max-height:140px;">
+                                    <circle class="score-bg" cx="50" cy="50" r="45"/>
+                                    <circle class="score-fill" cx="50" cy="50" r="45" id="score-circle"/>
+                                </svg>
+                                <div class="score-value">
+                                    <span id="network-score">--</span>
+                                    <span class="score-label">/ 100</span>
+                                </div>
+                            </div>
+                            <div class="score-grade" id="network-grade">--</div>
+                        </div>
+                    </div>
+
+                    <!-- IP Info Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>🌐 Connection Info</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="info-row">
+                                <span class="label">Public IP</span>
+                                <span class="value" id="public-ip">Loading...</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">Location</span>
+                                <span class="value" id="location">Loading...</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">ISP</span>
+                                <span class="value" id="isp">Loading...</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="label">Local IP</span>
+                                <span class="value" id="local-ip">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Speed Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>⚡ Speed Test</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="speed-meter">
+                                <div class="speed-item">
+                                    <span class="speed-icon">⬇️</span>
+                                    <span class="speed-value" id="download-speed">--</span>
+                                    <span class="speed-unit">Mbps</span>
+                                    <span class="speed-label">Download</span>
+                                </div>
+                                <div class="speed-item">
+                                    <span class="speed-icon">⬆️</span>
+                                    <span class="speed-value" id="upload-speed">--</span>
+                                    <span class="speed-unit">Mbps</span>
+                                    <span class="speed-label">Upload</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Latency Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>📈 Latency</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="latency-display">
+                                <div class="latency-value" id="latency-value">--</div>
+                                <div class="latency-unit">ms</div>
+                            </div>
+                            <div class="latency-details">
+                                <span>Jitter: <strong id="jitter-value">--</strong> ms</span>
+                                <span>Loss: <strong id="packet-loss">--</strong>%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="grid grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>📊 Latency Over Time</h3>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="latency-chart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>🌍 Regional Latency</h3>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="regional-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📋 Quick Stats</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <span class="stat-value" id="best-dns">--</span>
+                                <span class="stat-label">Best DNS</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value" id="best-cdn">--</span>
+                                <span class="stat-label">Best CDN</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value" id="best-location">--</span>
+                                <span class="stat-label">Best Location</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value" id="nat-type">--</span>
+                                <span class="stat-label">NAT Type</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value" id="mtu-value">--</span>
+                                <span class="stat-label">MTU</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value" id="open-ports">--</span>
+                                <span class="stat-label">Open Ports</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Network Scan Page -->
+            <section id="network-page" class="page">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>🔍 Network Scan</h3>
+                        <button class="btn btn-primary" id="start-network-scan">Start Scan</button>
+                    </div>
+                    <div class="card-body">
+                        <div id="network-results">
+                            <p class="empty-state">Click "Start Scan" to begin network analysis</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- DNS Page -->
+            <section id="dns-page" class="page">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>🌐 DNS Benchmark</h3>
+                        <button class="btn btn-primary" id="start-dns-test">Run Test</button>
+                    </div>
+                    <div class="card-body">
+                        <div id="dns-results">
+                            <p class="empty-state">Click "Run Test" to benchmark DNS servers</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CDN Page -->
+            <section id="cdn-page" class="page">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>☁️ CDN Test</h3>
+                        <button class="btn btn-primary" id="start-cdn-test">Run Test</button>
+                    </div>
+                    <div class="card-body">
+                        <div id="cdn-results">
+                            <p class="empty-state">Click "Run Test" to test CDN providers</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Global Ping Page -->
+            <section id="ping-page" class="page">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>🌍 Global Ping Test</h3>
+                        <button class="btn btn-primary" id="start-ping-test">Run Test</button>
+                    </div>
+                    <div class="card-body">
+                        <div id="ping-results">
+                            <p class="empty-state">Click "Run Test" to test global locations</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Protocol Page -->
+            <section id="protocol-page" class="page">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📡 Protocol Benchmark</h3>
+                        <button class="btn btn-primary" id="start-protocol-test">Run Test</button>
+                    </div>
+                    <div class="card-body">
+                        <div id="protocol-results">
+                            <p class="empty-state">Click "Run Test" to benchmark protocols</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Ports Page -->
+            <section id="ports-page" class="page">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>🔌 Port Scanner</h3>
+                        <button class="btn btn-primary" id="start-port-scan">Scan Ports</button>
+                    </div>
+                    <div class="card-body">
+                        <div id="port-results">
+                            <p class="empty-state">Click "Scan Ports" to check port accessibility</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recommendations Page -->
+            <section id="recommendations-page" class="page">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>🧠 Recommendations</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="recommendations-content">
+                            <p class="empty-state">Run a full scan to get personalized recommendations</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Reports Page -->
+            <section id="reports-page" class="page">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📄 Reports</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="reports-actions">
+                            <button class="btn btn-secondary" id="export-json">
+                                <span class="icon">📋</span>
+                                Export JSON
+                            </button>
+                            <button class="btn btn-secondary" id="export-pdf">
+                                <span class="icon">📄</span>
+                                Export PDF
+                            </button>
+                        </div>
+                        <div id="report-summary">
+                            <p class="empty-state">Run tests to generate reports</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-spinner"></div>
+        <p id="loading-message">Scanning network...</p>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
