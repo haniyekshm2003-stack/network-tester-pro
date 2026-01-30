@@ -165,13 +165,17 @@ const CONFIG = {
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('🚀 Network Analyzer Pro Starting...');
     
-    // Initialize app
-    await initApp();
+    try {
+        // Initialize app
+        await initApp();
+    } catch (err) {
+        console.error('Init error:', err);
+    }
     
-    // Hide loading screen
+    // Hide loading screen (always, even on error)
     setTimeout(() => {
         hideLoadingScreen();
-    }, 1500);
+    }, 1000);
 });
 
 async function initApp() {
