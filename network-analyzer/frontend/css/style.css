@@ -931,3 +931,608 @@ body {
     margin: 0;
     white-space: pre-wrap;
 }
+
+/* ===================================
+   Recommendations Page Styles
+   =================================== */
+
+/* Best Service Card */
+.best-service-card {
+    background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
+    border: 1px solid var(--accent-primary);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+}
+
+.best-service-card .service-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.best-service-card .service-icon {
+    font-size: 48px;
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-canvas);
+    border-radius: var(--radius-md);
+}
+
+.best-service-card .service-info {
+    flex: 1;
+}
+
+.best-service-card .service-info h4 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--text-primary);
+}
+
+.best-service-card .service-type {
+    color: var(--accent-primary);
+    font-size: 13px;
+}
+
+.best-service-card .service-score {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--bg-canvas);
+    padding: 12px 20px;
+    border-radius: var(--radius-md);
+}
+
+.best-service-card .service-score .score {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--accent-success);
+}
+
+.best-service-card .service-score .score-label {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.best-service-card .service-reason {
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    padding: 12px;
+    background: var(--bg-canvas);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--accent-primary);
+}
+
+.best-service-card .service-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.best-service-card .service-stats .stat {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.best-service-card .service-stats .stat-label {
+    width: 80px;
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.best-service-card .service-stats .progress-bar {
+    flex: 1;
+    height: 8px;
+    background: var(--bg-canvas);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.best-service-card .service-stats .progress {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-primary), var(--accent-success));
+    border-radius: 4px;
+}
+
+.best-service-card .service-stats .stat-value {
+    width: 40px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: right;
+}
+
+.best-service-card .service-features h5,
+.best-service-card .service-protocols h5 {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-secondary);
+}
+
+.best-service-card .service-features ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.best-service-card .service-features li {
+    background: var(--bg-canvas);
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    color: var(--accent-success);
+}
+
+.best-service-card .protocol-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.best-service-card .protocol-tags .tag {
+    background: var(--accent-primary);
+    color: var(--bg-canvas);
+    padding: 4px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* VPN Services Grid */
+.vpn-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+.vpn-card {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    transition: var(--transition-fast);
+    position: relative;
+}
+
+.vpn-card:hover {
+    border-color: var(--accent-primary);
+    transform: translateY(-2px);
+}
+
+.vpn-card.recommended {
+    border-color: var(--accent-success);
+    background: linear-gradient(135deg, rgba(63, 185, 80, 0.1) 0%, var(--bg-tertiary) 100%);
+}
+
+.vpn-card .badge {
+    position: absolute;
+    top: -10px;
+    right: 12px;
+    background: var(--accent-success);
+    color: var(--bg-canvas);
+    padding: 4px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.vpn-card .vpn-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.vpn-card .vpn-icon {
+    font-size: 32px;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-canvas);
+    border-radius: var(--radius-sm);
+}
+
+.vpn-card .vpn-info {
+    flex: 1;
+}
+
+.vpn-card .vpn-info h4 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.vpn-card .vpn-type {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.vpn-card .vpn-score {
+    background: var(--bg-canvas);
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+}
+
+.vpn-card .vpn-score .score {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--accent-primary);
+}
+
+.vpn-card .vpn-stats {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.vpn-card .mini-stat {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px;
+    background: var(--bg-canvas);
+    border-radius: var(--radius-sm);
+    font-size: 11px;
+}
+
+.vpn-card .mini-stat span:last-child {
+    font-weight: 600;
+    color: var(--accent-primary);
+    margin-top: 4px;
+}
+
+.vpn-card .vpn-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.vpn-card .feature-tag {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-default);
+    padding: 3px 8px;
+    border-radius: var(--radius-sm);
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+.vpn-card .vpn-difficulty {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-default);
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.vpn-card .difficulty-badge {
+    padding: 3px 8px;
+    border-radius: var(--radius-sm);
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.vpn-card .difficulty-badge.easy {
+    background: rgba(63, 185, 80, 0.2);
+    color: var(--accent-success);
+}
+
+.vpn-card .difficulty-badge.medium {
+    background: rgba(210, 153, 34, 0.2);
+    color: var(--accent-warning);
+}
+
+.vpn-card .difficulty-badge.advanced {
+    background: rgba(248, 81, 73, 0.2);
+    color: var(--accent-danger);
+}
+
+/* Strategy Grid */
+.strategy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.strategy-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+}
+
+.strategy-item .strategy-icon {
+    font-size: 24px;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-canvas);
+    border-radius: var(--radius-sm);
+}
+
+.strategy-item .strategy-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.strategy-item .strategy-label {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.strategy-item .strategy-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent-primary);
+}
+
+.strategy-tips {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    padding: 16px;
+}
+
+.strategy-tips h5 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.strategy-tips ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.strategy-tips li {
+    padding: 8px 12px;
+    background: var(--bg-canvas);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.strategy-tips li::before {
+    content: '💡 ';
+}
+
+/* Optimization Tips Grid */
+.tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+}
+
+.tip-card {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    padding: 16px;
+}
+
+.tip-card.priority-high {
+    border-left: 3px solid var(--accent-danger);
+}
+
+.tip-card.priority-medium {
+    border-left: 3px solid var(--accent-warning);
+}
+
+.tip-card.priority-low {
+    border-left: 3px solid var(--accent-success);
+}
+
+.tip-card .tip-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.tip-card .tip-icon {
+    font-size: 20px;
+}
+
+.tip-card .tip-category {
+    flex: 1;
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+
+.tip-card .tip-priority {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.tip-card .tip-priority.high {
+    background: rgba(248, 81, 73, 0.2);
+    color: var(--accent-danger);
+}
+
+.tip-card .tip-priority.medium {
+    background: rgba(210, 153, 34, 0.2);
+    color: var(--accent-warning);
+}
+
+.tip-card .tip-priority.low {
+    background: rgba(63, 185, 80, 0.2);
+    color: var(--accent-success);
+}
+
+.tip-card h4 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.tip-card p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+/* Config Section */
+.config-section {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    padding: 20px;
+}
+
+.config-section h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.config-section .config-description {
+    color: var(--text-secondary);
+    font-size: 13px;
+    margin-bottom: 16px;
+}
+
+.config-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.config-summary .config-item {
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    background: var(--bg-canvas);
+    border-radius: var(--radius-sm);
+}
+
+.config-summary .config-item .label {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+}
+
+.config-summary .config-item .value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent-primary);
+}
+
+.config-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--border-default);
+    padding-bottom: 12px;
+}
+
+.config-tab {
+    padding: 8px 16px;
+    background: transparent;
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.config-tab:hover {
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+}
+
+.config-tab.active {
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+    color: var(--bg-canvas);
+}
+
+.config-code {
+    background: var(--bg-canvas);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    max-height: 400px;
+    overflow: auto;
+    margin-bottom: 16px;
+}
+
+.config-code pre {
+    margin: 0;
+}
+
+.config-code code {
+    font-family: 'Fira Code', 'Consolas', monospace;
+    font-size: 12px;
+    color: var(--text-primary);
+}
+
+.config-actions {
+    display: flex;
+    gap: 12px;
+}
+
+/* Data Table Compact */
+.data-table.compact {
+    font-size: 12px;
+}
+
+.data-table.compact th,
+.data-table.compact td {
+    padding: 8px 12px;
+}
+
+.data-table tr.highlighted {
+    background: rgba(88, 166, 255, 0.1);
+}
+
+/* Mini Progress Bar */
+.mini-progress {
+    width: 60px;
+    height: 6px;
+    background: var(--bg-canvas);
+    border-radius: 3px;
+    overflow: hidden;
+    display: inline-block;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+.mini-progress .bar {
+    height: 100%;
+    background: var(--accent-primary);
+    border-radius: 3px;
+}
+
+/* Badges */
+.badge-excellent { color: var(--accent-success); }
+.badge-very-good { color: #4ac16d; }
+.badge-good { color: var(--accent-primary); }
+.badge-medium { color: var(--accent-warning); }
+.badge-low { color: var(--accent-danger); }

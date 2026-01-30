@@ -75,6 +75,11 @@ class NetworkAnalyzer {
         document.getElementById('start-protocol-test')?.addEventListener('click', () => this.runProtocolTest());
         document.getElementById('start-port-scan')?.addEventListener('click', () => this.runPortScan());
         
+        // Recommendation buttons
+        document.getElementById('generate-recommendations')?.addEventListener('click', () => this.runFullAnalysis());
+        document.getElementById('analyze-vpn-services')?.addEventListener('click', () => this.analyzeVPNServices());
+        document.getElementById('generate-config')?.addEventListener('click', () => this.generateOptimalConfig());
+        
         // Export
         document.getElementById('export-report')?.addEventListener('click', () => this.exportJSON());
         document.getElementById('export-json')?.addEventListener('click', () => this.exportJSON());
@@ -823,6 +828,957 @@ class NetworkAnalyzer {
     // ==========================================
     // Recommendations
     // ==========================================
+    
+    // VPN Services Database
+    getVPNServicesDB() {
+        return [
+            {
+                name: 'Cloudflare WARP',
+                type: 'Free/Premium',
+                protocols: ['WireGuard'],
+                features: ['Low latency', 'Free tier', 'Privacy focused', 'Good for Iran'],
+                bestFor: ['Daily use', 'Low latency', 'Free users'],
+                ports: [443, 2408, 1701],
+                reliability: 85,
+                speed: 90,
+                privacy: 80,
+                difficulty: 'Easy',
+                website: 'https://1.1.1.1',
+                icon: '☁️'
+            },
+            {
+                name: 'V2Ray/XRay',
+                type: 'Self-hosted',
+                protocols: ['VMess', 'VLESS', 'Trojan', 'Shadowsocks'],
+                features: ['Highly configurable', 'Multiple protocols', 'Anti-detection'],
+                bestFor: ['Advanced users', 'Restricted networks', 'Custom setups'],
+                ports: [443, 8443, 2053, 2083, 80],
+                reliability: 95,
+                speed: 85,
+                privacy: 95,
+                difficulty: 'Advanced',
+                website: 'https://github.com/XTLS/Xray-core',
+                icon: '⚡'
+            },
+            {
+                name: 'Sing-box',
+                type: 'Self-hosted',
+                protocols: ['VLESS', 'Trojan', 'Hysteria2', 'TUIC'],
+                features: ['Modern', 'High performance', 'Reality support'],
+                bestFor: ['Performance', 'Modern protocols', 'Anti-detection'],
+                ports: [443, 8443, 2053],
+                reliability: 92,
+                speed: 95,
+                privacy: 95,
+                difficulty: 'Advanced',
+                website: 'https://sing-box.sagernet.org',
+                icon: '📦'
+            },
+            {
+                name: 'Clash Meta',
+                type: 'Client',
+                protocols: ['VMess', 'VLESS', 'Trojan', 'Shadowsocks', 'WireGuard'],
+                features: ['Rule-based routing', 'Multiple proxies', 'Easy config'],
+                bestFor: ['Multi-proxy', 'Rule routing', 'Ease of use'],
+                ports: [443, 7890, 7891],
+                reliability: 88,
+                speed: 85,
+                privacy: 85,
+                difficulty: 'Medium',
+                website: 'https://github.com/MetaCubeX/Clash.Meta',
+                icon: '🔥'
+            },
+            {
+                name: 'WireGuard',
+                type: 'VPN Protocol',
+                protocols: ['WireGuard'],
+                features: ['Fast', 'Modern crypto', 'Low overhead'],
+                bestFor: ['Speed', 'Battery life', 'Simple setup'],
+                ports: [51820, 443],
+                reliability: 90,
+                speed: 98,
+                privacy: 90,
+                difficulty: 'Medium',
+                website: 'https://wireguard.com',
+                icon: '🔒'
+            },
+            {
+                name: 'Hysteria2',
+                type: 'Protocol',
+                protocols: ['Hysteria2'],
+                features: ['UDP-based', 'High speed', 'Anti-blocking'],
+                bestFor: ['High latency networks', 'Speed priority', 'Anti-detection'],
+                ports: [443, 8443],
+                reliability: 88,
+                speed: 95,
+                privacy: 90,
+                difficulty: 'Medium',
+                website: 'https://hysteria.network',
+                icon: '🚀'
+            },
+            {
+                name: 'Reality/XTLS',
+                type: 'Protocol',
+                protocols: ['VLESS-Reality'],
+                features: ['Undetectable', 'TLS fingerprint', 'High security'],
+                bestFor: ['Restricted networks', 'Anti-detection', 'Security'],
+                ports: [443],
+                reliability: 95,
+                speed: 90,
+                privacy: 98,
+                difficulty: 'Advanced',
+                website: 'https://github.com/XTLS/Xray-core',
+                icon: '🛡️'
+            },
+            {
+                name: 'OpenVPN',
+                type: 'VPN Protocol',
+                protocols: ['OpenVPN'],
+                features: ['Widely supported', 'Configurable', 'Proven security'],
+                bestFor: ['Compatibility', 'Enterprise', 'Proven security'],
+                ports: [443, 1194],
+                reliability: 85,
+                speed: 75,
+                privacy: 85,
+                difficulty: 'Medium',
+                website: 'https://openvpn.net',
+                icon: '🔓'
+            }
+        ];
+    }
+
+    // Protocol Database
+    getProtocolsDB() {
+        return [
+            { name: 'VLESS-Reality', score: 98, antiDetection: 'Excellent', speed: 'High', security: 'Very High', recommended: true },
+            { name: 'Hysteria2', score: 95, antiDetection: 'Very Good', speed: 'Very High', security: 'High', recommended: true },
+            { name: 'VLESS-XTLS', score: 93, antiDetection: 'Very Good', speed: 'Very High', security: 'Very High', recommended: true },
+            { name: 'Trojan', score: 90, antiDetection: 'Good', speed: 'High', security: 'High', recommended: true },
+            { name: 'VMess-WS-TLS', score: 85, antiDetection: 'Good', speed: 'Medium', security: 'High', recommended: false },
+            { name: 'Shadowsocks', score: 80, antiDetection: 'Medium', speed: 'High', security: 'Medium', recommended: false },
+            { name: 'WireGuard', score: 88, antiDetection: 'Low', speed: 'Very High', security: 'Very High', recommended: false },
+            { name: 'OpenVPN', score: 70, antiDetection: 'Low', speed: 'Medium', security: 'High', recommended: false }
+        ];
+    }
+
+    // Best Ports Database
+    getBestPortsDB() {
+        return [
+            { port: 443, name: 'HTTPS', reliability: 98, description: 'Most reliable - standard HTTPS port', recommended: true },
+            { port: 8443, name: 'HTTPS-Alt', reliability: 90, description: 'Alternative HTTPS - rarely blocked', recommended: true },
+            { port: 2053, name: 'Cloudflare', reliability: 88, description: 'Cloudflare DNS-over-TLS port', recommended: true },
+            { port: 2083, name: 'cPanel SSL', reliability: 85, description: 'cPanel SSL port - usually open', recommended: true },
+            { port: 2087, name: 'cPanel WHM', reliability: 82, description: 'WHM SSL port', recommended: false },
+            { port: 80, name: 'HTTP', reliability: 95, description: 'Standard HTTP - no encryption visible', recommended: false },
+            { port: 8080, name: 'HTTP-Proxy', reliability: 80, description: 'Common proxy port', recommended: false },
+            { port: 51820, name: 'WireGuard', reliability: 60, description: 'Default WireGuard - may be blocked', recommended: false }
+        ];
+    }
+
+    async runFullAnalysis() {
+        this.showLoading('Running comprehensive analysis...');
+        
+        try {
+            // Run all tests
+            this.updateLoadingMessage('Scanning network...');
+            const network = await this.performNetworkScan();
+            
+            this.updateLoadingMessage('Testing DNS servers...');
+            const dns = await this.performDNSTest();
+            
+            this.updateLoadingMessage('Testing CDN providers...');
+            const cdn = await this.performCDNTest();
+            
+            this.updateLoadingMessage('Testing global locations...');
+            const ping = await this.performPingTest();
+            
+            this.updateLoadingMessage('Testing protocols...');
+            const protocol = await this.performProtocolTest();
+            
+            this.updateLoadingMessage('Scanning ports...');
+            const ports = await this.performPortScan();
+            
+            // Store results
+            this.testResults = { network, dns, cdn, ping, protocol, ports };
+            
+            // Generate all recommendations
+            this.updateLoadingMessage('Generating recommendations...');
+            this.generateAllRecommendations(this.testResults);
+            
+            this.showToast('Full analysis completed successfully!', 'success');
+        } catch (error) {
+            console.error('Analysis error:', error);
+            this.showToast('Analysis failed: ' + error.message, 'error');
+        } finally {
+            this.hideLoading();
+        }
+    }
+
+    generateAllRecommendations(results) {
+        // 1. Smart Recommendations
+        this.generateSmartRecommendations(results);
+        
+        // 2. Best Service For You
+        this.generateBestService(results);
+        
+        // 3. VPN Services Analysis
+        this.displayVPNServicesAnalysis(results);
+        
+        // 4. Protocol Recommendations
+        this.displayProtocolRecommendations(results);
+        
+        // 5. Port Recommendations
+        this.displayPortRecommendations(results);
+        
+        // 6. Connection Strategy
+        this.generateConnectionStrategy(results);
+        
+        // 7. Optimization Tips
+        this.generateOptimizationTips(results);
+        
+        // Update dashboard
+        this.updateDashboardWithResults(results);
+    }
+
+    generateSmartRecommendations(results) {
+        const recommendations = [];
+        
+        // Network analysis
+        if (results.network) {
+            const latency = results.network.latency || 0;
+            
+            if (latency < 50) {
+                recommendations.push({
+                    type: 'success',
+                    icon: '✅',
+                    title: 'Excellent Network Latency',
+                    description: `Your latency (${Math.round(latency)}ms) is excellent! You can use any protocol including high-speed options like WireGuard.`
+                });
+            } else if (latency < 100) {
+                recommendations.push({
+                    type: 'info',
+                    icon: '👍',
+                    title: 'Good Network Latency',
+                    description: `Latency of ${Math.round(latency)}ms is good. Recommended protocols: VLESS-Reality, Hysteria2, or Trojan.`
+                });
+            } else if (latency < 200) {
+                recommendations.push({
+                    type: 'warning',
+                    icon: '⚠️',
+                    title: 'Moderate Latency',
+                    description: `Latency of ${Math.round(latency)}ms is moderate. Use multiplexing and consider Hysteria2 for UDP acceleration.`
+                });
+            } else {
+                recommendations.push({
+                    type: 'danger',
+                    icon: '🔴',
+                    title: 'High Latency Detected',
+                    description: `Latency of ${Math.round(latency)}ms is high. Use Hysteria2 or TUIC for better performance on high-latency networks.`
+                });
+            }
+        }
+        
+        // DNS recommendations
+        if (results.dns && results.dns.length > 0) {
+            const bestDNS = results.dns[0];
+            if (bestDNS.latency < 100) {
+                recommendations.push({
+                    type: 'success',
+                    icon: '🌐',
+                    title: 'Best DNS Server',
+                    description: `Use ${bestDNS.name} (${bestDNS.ip}) for fastest DNS resolution at ${bestDNS.latency}ms.`
+                });
+            }
+        }
+        
+        // CDN recommendations
+        if (results.cdn && results.cdn.length > 0) {
+            const bestCDN = results.cdn[0];
+            recommendations.push({
+                type: 'info',
+                icon: '☁️',
+                title: 'Best CDN Provider',
+                description: `${bestCDN.name} has the lowest latency (${bestCDN.latency}ms). Consider using CDN-backed services.`
+            });
+        }
+        
+        // Location recommendations
+        if (results.ping && results.ping.length > 0) {
+            const sorted = [...results.ping].sort((a, b) => a.latency - b.latency);
+            const best = sorted[0];
+            recommendations.push({
+                type: 'info',
+                icon: '🌍',
+                title: 'Optimal Server Location',
+                description: `Connect to servers in ${best.location} for the lowest latency (${best.latency}ms).`
+            });
+        }
+        
+        this.displayRecommendations(recommendations);
+    }
+
+    generateBestService(results) {
+        const container = document.getElementById('best-service-content');
+        const vpnServices = this.getVPNServicesDB();
+        
+        // Calculate scores based on network conditions
+        const latency = results.network?.latency || 100;
+        const jitter = results.network?.jitter || 10;
+        
+        let recommendedService;
+        let reason = '';
+        
+        if (latency < 50 && jitter < 5) {
+            // Excellent network - recommend speed-focused
+            recommendedService = vpnServices.find(s => s.name === 'WireGuard');
+            reason = 'Your network has excellent conditions. WireGuard provides maximum speed with modern encryption.';
+        } else if (latency > 150) {
+            // High latency - recommend Hysteria2
+            recommendedService = vpnServices.find(s => s.name === 'Hysteria2');
+            reason = 'High latency detected. Hysteria2 uses UDP acceleration for better performance on slow networks.';
+        } else {
+            // Medium network - recommend Reality
+            recommendedService = vpnServices.find(s => s.name === 'Reality/XTLS');
+            reason = 'For balanced security and performance with strong anti-detection, Reality protocol is ideal.';
+        }
+        
+        if (!recommendedService) {
+            recommendedService = vpnServices[1]; // V2Ray as default
+            reason = 'V2Ray/XRay provides the most flexibility with multiple protocol support.';
+        }
+        
+        container.innerHTML = `
+            <div class="best-service-card">
+                <div class="service-header">
+                    <span class="service-icon">${recommendedService.icon}</span>
+                    <div class="service-info">
+                        <h4>${recommendedService.name}</h4>
+                        <span class="service-type">${recommendedService.type}</span>
+                    </div>
+                    <div class="service-score">
+                        <span class="score">${Math.round((recommendedService.reliability + recommendedService.speed + recommendedService.privacy) / 3)}</span>
+                        <span class="score-label">/100</span>
+                    </div>
+                </div>
+                <p class="service-reason">${reason}</p>
+                <div class="service-stats">
+                    <div class="stat">
+                        <span class="stat-label">Reliability</span>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: ${recommendedService.reliability}%"></div>
+                        </div>
+                        <span class="stat-value">${recommendedService.reliability}%</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Speed</span>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: ${recommendedService.speed}%"></div>
+                        </div>
+                        <span class="stat-value">${recommendedService.speed}%</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Privacy</span>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: ${recommendedService.privacy}%"></div>
+                        </div>
+                        <span class="stat-value">${recommendedService.privacy}%</span>
+                    </div>
+                </div>
+                <div class="service-features">
+                    <h5>Features:</h5>
+                    <ul>
+                        ${recommendedService.features.map(f => `<li>✓ ${f}</li>`).join('')}
+                    </ul>
+                </div>
+                <div class="service-protocols">
+                    <h5>Supported Protocols:</h5>
+                    <div class="protocol-tags">
+                        ${recommendedService.protocols.map(p => `<span class="tag">${p}</span>`).join('')}
+                    </div>
+                </div>
+                <a href="${recommendedService.website}" target="_blank" class="btn btn-primary" style="margin-top: 16px;">
+                    <span class="icon">🔗</span> Visit Website
+                </a>
+            </div>
+        `;
+    }
+
+    async analyzeVPNServices() {
+        this.showLoading('Analyzing VPN services for your network...');
+        
+        try {
+            // Ensure we have test results
+            if (!this.testResults.network) {
+                await this.runFullAnalysis();
+            } else {
+                this.displayVPNServicesAnalysis(this.testResults);
+            }
+            this.showToast('VPN analysis completed', 'success');
+        } catch (error) {
+            this.showToast('Analysis failed', 'error');
+        } finally {
+            this.hideLoading();
+        }
+    }
+
+    displayVPNServicesAnalysis(results) {
+        const container = document.getElementById('vpn-services-content');
+        const vpnServices = this.getVPNServicesDB();
+        
+        // Calculate compatibility scores
+        const latency = results.network?.latency || 100;
+        const scoredServices = vpnServices.map(service => {
+            let compatScore = (service.reliability + service.speed + service.privacy) / 3;
+            
+            // Adjust based on network conditions
+            if (latency > 150 && service.name === 'Hysteria2') compatScore += 10;
+            if (latency > 150 && service.name === 'WireGuard') compatScore -= 10;
+            if (latency < 50 && service.name === 'WireGuard') compatScore += 10;
+            
+            return { ...service, compatScore: Math.min(100, Math.round(compatScore)) };
+        }).sort((a, b) => b.compatScore - a.compatScore);
+        
+        container.innerHTML = `
+            <div class="vpn-grid">
+                ${scoredServices.map((service, index) => `
+                    <div class="vpn-card ${index === 0 ? 'recommended' : ''}">
+                        ${index === 0 ? '<span class="badge">🏆 Best Match</span>' : ''}
+                        <div class="vpn-header">
+                            <span class="vpn-icon">${service.icon}</span>
+                            <div class="vpn-info">
+                                <h4>${service.name}</h4>
+                                <span class="vpn-type">${service.type}</span>
+                            </div>
+                            <div class="vpn-score">
+                                <span class="score">${service.compatScore}</span>
+                            </div>
+                        </div>
+                        <div class="vpn-stats">
+                            <div class="mini-stat">
+                                <span>⚡ Speed</span>
+                                <span>${service.speed}%</span>
+                            </div>
+                            <div class="mini-stat">
+                                <span>🔒 Privacy</span>
+                                <span>${service.privacy}%</span>
+                            </div>
+                            <div class="mini-stat">
+                                <span>✓ Reliability</span>
+                                <span>${service.reliability}%</span>
+                            </div>
+                        </div>
+                        <div class="vpn-features">
+                            ${service.features.slice(0, 3).map(f => `<span class="feature-tag">${f}</span>`).join('')}
+                        </div>
+                        <div class="vpn-difficulty">
+                            <span>Difficulty:</span>
+                            <span class="difficulty-badge ${service.difficulty.toLowerCase()}">${service.difficulty}</span>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    displayProtocolRecommendations(results) {
+        const container = document.getElementById('protocol-recommendations');
+        const protocols = this.getProtocolsDB();
+        const latency = results.network?.latency || 100;
+        
+        // Adjust recommendations based on network
+        const adjusted = protocols.map(p => {
+            let score = p.score;
+            if (latency > 150 && p.name.includes('Hysteria')) score += 5;
+            if (latency < 50 && p.name.includes('WireGuard')) score += 5;
+            return { ...p, adjustedScore: Math.min(100, score) };
+        }).sort((a, b) => b.adjustedScore - a.adjustedScore);
+        
+        container.innerHTML = `
+            <table class="data-table compact">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Protocol</th>
+                        <th>Score</th>
+                        <th>Anti-Detection</th>
+                        <th>Speed</th>
+                        <th>Recommended</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${adjusted.map((p, i) => `
+                        <tr class="${i < 3 ? 'highlighted' : ''}">
+                            <td><span class="rank ${i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : ''}">${i + 1}</span></td>
+                            <td><strong>${p.name}</strong></td>
+                            <td>${p.adjustedScore}</td>
+                            <td><span class="badge-${p.antiDetection.toLowerCase().replace(' ', '-')}">${p.antiDetection}</span></td>
+                            <td>${p.speed}</td>
+                            <td>${p.recommended ? '✅' : '⚪'}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        `;
+    }
+
+    displayPortRecommendations(results) {
+        const container = document.getElementById('port-recommendations');
+        const ports = this.getBestPortsDB();
+        
+        container.innerHTML = `
+            <table class="data-table compact">
+                <thead>
+                    <tr>
+                        <th>Port</th>
+                        <th>Name</th>
+                        <th>Reliability</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${ports.map(p => `
+                        <tr class="${p.recommended ? 'highlighted' : ''}">
+                            <td><strong>${p.port}</strong></td>
+                            <td>${p.name}</td>
+                            <td>
+                                <div class="mini-progress">
+                                    <div class="bar" style="width: ${p.reliability}%"></div>
+                                </div>
+                                ${p.reliability}%
+                            </td>
+                            <td>${p.description} ${p.recommended ? '⭐' : ''}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        `;
+    }
+
+    generateConnectionStrategy(results) {
+        const container = document.getElementById('strategy-content');
+        const latency = results.network?.latency || 100;
+        const jitter = results.network?.jitter || 10;
+        
+        let strategy = {
+            approach: 'Standard',
+            transport: 'TLS 1.3',
+            port: 443,
+            protocol: 'VLESS-Reality',
+            mux: false,
+            fallbackPorts: [8443, 2053, 2083],
+            tips: []
+        };
+        
+        if (latency > 150) {
+            strategy.approach = 'High Latency Optimized';
+            strategy.protocol = 'Hysteria2';
+            strategy.mux = true;
+            strategy.tips.push('Use UDP-based protocols for better performance');
+            strategy.tips.push('Enable multiplexing to reduce connection overhead');
+        } else if (latency < 50) {
+            strategy.approach = 'Speed Optimized';
+            strategy.protocol = 'WireGuard or VLESS-XTLS';
+            strategy.tips.push('Excellent network - prioritize speed over anti-detection');
+        } else {
+            strategy.tips.push('Balanced configuration recommended');
+            strategy.tips.push('Use Reality protocol for best anti-detection');
+        }
+        
+        if (jitter > 20) {
+            strategy.tips.push('High jitter detected - use buffering and error correction');
+        }
+        
+        container.innerHTML = `
+            <div class="strategy-grid">
+                <div class="strategy-item">
+                    <span class="strategy-icon">🎯</span>
+                    <div class="strategy-info">
+                        <span class="strategy-label">Approach</span>
+                        <span class="strategy-value">${strategy.approach}</span>
+                    </div>
+                </div>
+                <div class="strategy-item">
+                    <span class="strategy-icon">📡</span>
+                    <div class="strategy-info">
+                        <span class="strategy-label">Protocol</span>
+                        <span class="strategy-value">${strategy.protocol}</span>
+                    </div>
+                </div>
+                <div class="strategy-item">
+                    <span class="strategy-icon">🔌</span>
+                    <div class="strategy-info">
+                        <span class="strategy-label">Primary Port</span>
+                        <span class="strategy-value">${strategy.port}</span>
+                    </div>
+                </div>
+                <div class="strategy-item">
+                    <span class="strategy-icon">🔒</span>
+                    <div class="strategy-info">
+                        <span class="strategy-label">Transport</span>
+                        <span class="strategy-value">${strategy.transport}</span>
+                    </div>
+                </div>
+                <div class="strategy-item">
+                    <span class="strategy-icon">🔄</span>
+                    <div class="strategy-info">
+                        <span class="strategy-label">Multiplexing</span>
+                        <span class="strategy-value">${strategy.mux ? 'Enabled' : 'Disabled'}</span>
+                    </div>
+                </div>
+                <div class="strategy-item">
+                    <span class="strategy-icon">🔀</span>
+                    <div class="strategy-info">
+                        <span class="strategy-label">Fallback Ports</span>
+                        <span class="strategy-value">${strategy.fallbackPorts.join(', ')}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="strategy-tips">
+                <h5>💡 Tips for Your Network:</h5>
+                <ul>
+                    ${strategy.tips.map(t => `<li>${t}</li>`).join('')}
+                </ul>
+            </div>
+        `;
+    }
+
+    generateOptimizationTips(results) {
+        const container = document.getElementById('optimization-tips');
+        const latency = results.network?.latency || 100;
+        const tips = [];
+        
+        // General tips
+        tips.push({
+            category: 'DNS',
+            icon: '🌐',
+            title: 'Use Encrypted DNS',
+            description: 'Configure DNS-over-HTTPS (DoH) or DNS-over-TLS (DoT) to prevent DNS leaks.',
+            priority: 'high'
+        });
+        
+        if (results.dns && results.dns.length > 0) {
+            tips.push({
+                category: 'DNS',
+                icon: '⚡',
+                title: `Switch to ${results.dns[0].name}`,
+                description: `${results.dns[0].name} has the fastest response time (${results.dns[0].latency}ms) from your location.`,
+                priority: 'medium'
+            });
+        }
+        
+        if (latency > 100) {
+            tips.push({
+                category: 'Performance',
+                icon: '🚀',
+                title: 'Enable Multiplexing',
+                description: 'Use mux/multiplexing to reduce connection overhead on high-latency networks.',
+                priority: 'high'
+            });
+        }
+        
+        tips.push({
+            category: 'Security',
+            icon: '🔒',
+            title: 'Use TLS 1.3',
+            description: 'Ensure your connections use TLS 1.3 for best security and performance.',
+            priority: 'high'
+        });
+        
+        tips.push({
+            category: 'Anti-Detection',
+            icon: '🛡️',
+            title: 'Use Reality Protocol',
+            description: 'Reality protocol mimics real TLS handshakes, making detection nearly impossible.',
+            priority: 'high'
+        });
+        
+        tips.push({
+            category: 'Reliability',
+            icon: '🔄',
+            title: 'Configure Fallback',
+            description: 'Set up fallback ports (443, 8443, 2053) to ensure connectivity when ports are blocked.',
+            priority: 'medium'
+        });
+        
+        if (latency > 150) {
+            tips.push({
+                category: 'Performance',
+                icon: '📡',
+                title: 'Consider UDP Protocols',
+                description: 'Hysteria2 or TUIC can significantly improve performance on high-latency networks.',
+                priority: 'high'
+            });
+        }
+        
+        container.innerHTML = `
+            <div class="tips-grid">
+                ${tips.map(tip => `
+                    <div class="tip-card priority-${tip.priority}">
+                        <div class="tip-header">
+                            <span class="tip-icon">${tip.icon}</span>
+                            <span class="tip-category">${tip.category}</span>
+                            <span class="tip-priority ${tip.priority}">${tip.priority}</span>
+                        </div>
+                        <h4>${tip.title}</h4>
+                        <p>${tip.description}</p>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    async generateOptimalConfig() {
+        this.showLoading('Generating optimal configuration...');
+        
+        try {
+            // Ensure we have test results
+            if (!this.testResults.network) {
+                this.updateLoadingMessage('Running network analysis first...');
+                const network = await this.performNetworkScan();
+                this.testResults.network = network;
+            }
+            
+            this.displayOptimalConfig(this.testResults);
+            this.showToast('Configuration generated!', 'success');
+        } catch (error) {
+            this.showToast('Failed to generate config', 'error');
+        } finally {
+            this.hideLoading();
+        }
+    }
+
+    displayOptimalConfig(results) {
+        const container = document.getElementById('config-content');
+        const latency = results.network?.latency || 100;
+        
+        // Generate config based on network analysis
+        const config = this.generateConfigJSON(results);
+        
+        container.innerHTML = `
+            <div class="config-section">
+                <h4>📋 Recommended Configuration</h4>
+                <p class="config-description">Based on your network analysis, here's the optimal configuration:</p>
+                
+                <div class="config-summary">
+                    <div class="config-item">
+                        <span class="label">Protocol:</span>
+                        <span class="value">${config.protocol}</span>
+                    </div>
+                    <div class="config-item">
+                        <span class="label">Port:</span>
+                        <span class="value">${config.port}</span>
+                    </div>
+                    <div class="config-item">
+                        <span class="label">Transport:</span>
+                        <span class="value">${config.transport}</span>
+                    </div>
+                    <div class="config-item">
+                        <span class="label">Security:</span>
+                        <span class="value">${config.security}</span>
+                    </div>
+                </div>
+                
+                <div class="config-tabs">
+                    <button class="config-tab active" data-config="xray">Xray Config</button>
+                    <button class="config-tab" data-config="clash">Clash Config</button>
+                    <button class="config-tab" data-config="singbox">Sing-box Config</button>
+                </div>
+                
+                <div class="config-code" id="config-display">
+                    <pre><code>${JSON.stringify(config.xrayConfig, null, 2)}</code></pre>
+                </div>
+                
+                <div class="config-actions">
+                    <button class="btn btn-primary" onclick="app.copyConfig()">
+                        <span class="icon">📋</span> Copy Config
+                    </button>
+                    <button class="btn btn-secondary" onclick="app.downloadConfig()">
+                        <span class="icon">💾</span> Download
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        // Store configs for copy/download
+        this.currentConfigs = config;
+        
+        // Bind tab events
+        container.querySelectorAll('.config-tab').forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                container.querySelectorAll('.config-tab').forEach(t => t.classList.remove('active'));
+                e.target.classList.add('active');
+                const configType = e.target.dataset.config;
+                const display = document.getElementById('config-display');
+                
+                if (configType === 'xray') {
+                    display.innerHTML = `<pre><code>${JSON.stringify(config.xrayConfig, null, 2)}</code></pre>`;
+                } else if (configType === 'clash') {
+                    display.innerHTML = `<pre><code>${config.clashConfig}</code></pre>`;
+                } else if (configType === 'singbox') {
+                    display.innerHTML = `<pre><code>${JSON.stringify(config.singboxConfig, null, 2)}</code></pre>`;
+                }
+            });
+        });
+    }
+
+    generateConfigJSON(results) {
+        const latency = results.network?.latency || 100;
+        const bestDNS = results.dns?.[0]?.ip || '1.1.1.1';
+        
+        let protocol = 'vless';
+        let transport = 'tcp';
+        let security = 'reality';
+        let port = 443;
+        
+        if (latency > 150) {
+            protocol = 'hysteria2';
+            transport = 'udp';
+            security = 'tls';
+        }
+        
+        // Xray config template
+        const xrayConfig = {
+            log: { loglevel: "warning" },
+            inbounds: [{
+                port: 1080,
+                listen: "127.0.0.1",
+                protocol: "socks",
+                settings: { udp: true }
+            }],
+            outbounds: [{
+                protocol: protocol,
+                settings: {
+                    vnext: [{
+                        address: "your-server.com",
+                        port: port,
+                        users: [{
+                            id: "your-uuid-here",
+                            flow: "xtls-rprx-vision",
+                            encryption: "none"
+                        }]
+                    }]
+                },
+                streamSettings: {
+                    network: transport,
+                    security: security,
+                    realitySettings: {
+                        serverName: "www.google.com",
+                        fingerprint: "chrome",
+                        shortId: "",
+                        publicKey: "your-public-key"
+                    }
+                }
+            }],
+            dns: {
+                servers: [bestDNS, "8.8.8.8"]
+            }
+        };
+        
+        // Clash config template
+        const clashConfig = `# Clash Meta Configuration
+# Generated for your network conditions
+
+proxies:
+  - name: "VPN-Server"
+    type: ${protocol}
+    server: your-server.com
+    port: ${port}
+    uuid: your-uuid-here
+    flow: xtls-rprx-vision
+    network: ${transport}
+    tls: true
+    servername: www.google.com
+    reality-opts:
+      public-key: your-public-key
+      short-id: ""
+    client-fingerprint: chrome
+
+proxy-groups:
+  - name: "Proxy"
+    type: select
+    proxies:
+      - VPN-Server
+
+dns:
+  enable: true
+  enhanced-mode: fake-ip
+  nameserver:
+    - ${bestDNS}
+    - 8.8.8.8
+
+rules:
+  - GEOIP,IR,DIRECT
+  - MATCH,Proxy`;
+        
+        // Sing-box config template
+        const singboxConfig = {
+            log: { level: "info" },
+            dns: {
+                servers: [
+                    { tag: "cloudflare", address: bestDNS },
+                    { tag: "google", address: "8.8.8.8" }
+                ]
+            },
+            inbounds: [{
+                type: "tun",
+                inet4_address: "172.19.0.1/30",
+                auto_route: true,
+                strict_route: true
+            }],
+            outbounds: [{
+                type: protocol,
+                tag: "proxy",
+                server: "your-server.com",
+                server_port: port,
+                uuid: "your-uuid-here",
+                flow: "xtls-rprx-vision",
+                tls: {
+                    enabled: true,
+                    server_name: "www.google.com",
+                    utls: { enabled: true, fingerprint: "chrome" },
+                    reality: {
+                        enabled: true,
+                        public_key: "your-public-key",
+                        short_id: ""
+                    }
+                }
+            }]
+        };
+        
+        return {
+            protocol,
+            port,
+            transport,
+            security,
+            xrayConfig,
+            clashConfig,
+            singboxConfig
+        };
+    }
+
+    copyConfig() {
+        const display = document.getElementById('config-display');
+        const text = display.textContent;
+        navigator.clipboard.writeText(text).then(() => {
+            this.showToast('Configuration copied to clipboard!', 'success');
+        });
+    }
+
+    downloadConfig() {
+        if (!this.currentConfigs) return;
+        
+        const data = JSON.stringify(this.currentConfigs.xrayConfig, null, 2);
+        const blob = new Blob([data], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'config.json';
+        a.click();
+        URL.revokeObjectURL(url);
+        
+        this.showToast('Configuration downloaded!', 'success');
+    }
+
     generateRecommendations(results) {
         const recommendations = [];
 

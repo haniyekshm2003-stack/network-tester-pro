@@ -323,13 +323,110 @@
 
             <!-- Recommendations Page -->
             <section id="recommendations-page" class="page">
+                <!-- Main Recommendations -->
                 <div class="card">
                     <div class="card-header">
-                        <h3>🧠 Recommendations</h3>
+                        <h3>🧠 Smart Recommendations</h3>
+                        <button class="btn btn-primary" id="generate-recommendations">
+                            <span class="icon">🔍</span>
+                            Generate Recommendations
+                        </button>
                     </div>
                     <div class="card-body">
                         <div id="recommendations-content">
-                            <p class="empty-state">Run a full scan to get personalized recommendations</p>
+                            <p class="empty-state">Click "Generate Recommendations" to get personalized suggestions based on network analysis</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Best Service For You -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>⭐ Best Service For You</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="best-service-content">
+                            <p class="empty-state">Run analysis to find the best service for your network</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Best VPN Services -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>🔐 Best VPN Services</h3>
+                        <button class="btn btn-secondary" id="analyze-vpn-services">
+                            <span class="icon">🔍</span>
+                            Analyze VPN Services
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="vpn-services-content">
+                            <p class="empty-state">Click "Analyze VPN Services" to get VPN recommendations based on your network</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Optimal Configuration -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>⚙️ Optimal Configuration</h3>
+                        <button class="btn btn-secondary" id="generate-config">
+                            <span class="icon">📝</span>
+                            Generate Config
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div id="config-content">
+                            <p class="empty-state">Click "Generate Config" to create optimized configuration based on your network analysis</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Protocol & Port Recommendations -->
+                <div class="grid grid-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>📡 Best Protocols</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="protocol-recommendations">
+                                <p class="empty-state">Run analysis for protocol recommendations</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>🔌 Best Ports</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="port-recommendations">
+                                <p class="empty-state">Run analysis for port recommendations</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Connection Strategy -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>🎯 Connection Strategy</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="strategy-content">
+                            <p class="empty-state">Run analysis to get optimal connection strategy</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Optimization Tips -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>💡 Optimization Tips</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="optimization-tips">
+                            <p class="empty-state">Run analysis to get optimization tips</p>
                         </div>
                     </div>
                 </div>
